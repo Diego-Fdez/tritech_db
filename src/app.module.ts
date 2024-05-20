@@ -8,6 +8,7 @@ import { CorrelationIdMiddleware } from './correlation-id.middleware';
 import { loggerOptions } from './utils';
 import { AuthModule } from './auth/auth.module';
 import { ClientsModule } from './clients/clients.module';
+import { TemplatesModule } from './templates/templates.module';
 
 @Module({
   imports: [
@@ -20,7 +21,9 @@ import { ClientsModule } from './clients/clients.module';
     UsersModule,
     AuthModule,
     ClientsModule,
+    TemplatesModule,
   ],
+  providers: [],
   controllers: [],
 })
 export class AppModule implements NestModule {
