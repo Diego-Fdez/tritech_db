@@ -9,6 +9,7 @@ import { loggerOptions } from './utils';
 import { AuthModule } from './auth/auth.module';
 import { ClientsModule } from './clients/clients.module';
 import { TemplatesModule } from './templates/templates.module';
+import { SugarCaneMillsModule } from './suggar-cane-mills/sugar-cane-mills.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { TemplatesModule } from './templates/templates.module';
     AuthModule,
     ClientsModule,
     TemplatesModule,
+    SugarCaneMillsModule,
   ],
   providers: [],
   controllers: [],
