@@ -10,6 +10,7 @@ import { AuthModule } from './auth/auth.module';
 import { ClientsModule } from './clients/clients.module';
 import { TemplatesModule } from './templates/templates.module';
 import { SugarCaneMillsModule } from './suggar-cane-mills/sugar-cane-mills.module';
+import { MillComponentsModule } from './mill-components/mill-components.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { SugarCaneMillsModule } from './suggar-cane-mills/sugar-cane-mills.modul
     ClientsModule,
     TemplatesModule,
     SugarCaneMillsModule,
+    MillComponentsModule,
   ],
   providers: [],
   controllers: [],
