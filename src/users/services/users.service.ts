@@ -6,6 +6,7 @@ import { UsersEntity } from '../entities/users.entity';
 import { UserCreateDTO, UserUpdateDTO } from '../dto';
 import { ErrorManager } from '../../utils/error.manager';
 import { Response } from 'src/utils';
+import { emailDomainValidator } from '../utils';
 
 @Injectable()
 export class UsersService {
@@ -18,6 +19,21 @@ export class UsersService {
   //function to create a new user
   public async createUser(body: UserCreateDTO): Promise<Response<any>> {
     try {
+      //check if the email domain is valid
+      emailDomainValidator(body?.email);
+
+      //check if user already exists
+      const userExists = await this.userRepository.findOneBy({
+        email: body?.email,
+      });
+
+      if (userExists) {
+        throw ErrorManager.createCustomError(
+          'User already exists',
+          HttpStatus.CONFLICT,
+        );
+      }
+
       //hash password with bcrypt
       body.password = await bcrypt.hash(body.password, +process.env.HASH_SALT);
       await this.userRepository.save(body);
