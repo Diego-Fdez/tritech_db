@@ -11,6 +11,7 @@ import { ClientsModule } from './clients/clients.module';
 import { TemplatesModule } from './templates/templates.module';
 import { SugarCaneMillsModule } from './suggar-cane-mills/sugar-cane-mills.module';
 import { MillComponentsModule } from './mill-components/mill-components.module';
+import { TemperatureDataModule } from './temperature-data/temperature-data.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { MillComponentsModule } from './mill-components/mill-components.module';
     TemplatesModule,
     SugarCaneMillsModule,
     MillComponentsModule,
+    TemperatureDataModule,
   ],
   providers: [],
   controllers: [],
