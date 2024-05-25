@@ -1,8 +1,16 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+} from 'typeorm';
 import { BaseEntity } from '../../config/base.entity';
 import { TemplatesInterface } from '../interfaces';
 import { UsersEntity } from '../../users/entities/users.entity';
 import { ClientsEntity } from '../../clients/entities/clients.entity';
+import { SugarCaneMillsEntity } from '../../suggar-cane-mills/entities/sugarCaneMills.entity';
 
 @Entity({ name: 'templates' })
 export class TemplatesEntity extends BaseEntity implements TemplatesInterface {
@@ -22,4 +30,10 @@ export class TemplatesEntity extends BaseEntity implements TemplatesInterface {
   @OneToOne(() => ClientsEntity, (client) => client.template)
   @JoinColumn({ name: 'client_id' })
   client: ClientsEntity;
+
+  @OneToMany(
+    () => SugarCaneMillsEntity,
+    (sugarCaneMill) => sugarCaneMill.template,
+  )
+  sugarCaneMills: SugarCaneMillsEntity[];
 }
