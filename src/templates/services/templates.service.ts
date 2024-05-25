@@ -4,6 +4,8 @@ import { Repository } from 'typeorm';
 import { TemplatesEntity } from '../entities/templates.entity';
 import { TemplatesCreateDTO, TemplatesUpdateDTO } from '../dto/templates.dto';
 import { ErrorManager, Response } from '../../utils';
+import { UsersService } from '../../users/services/users.service';
+import { ClientsService } from '../../clients/services/clients.service';
 
 @Injectable()
 export class TemplatesService {
@@ -11,6 +13,8 @@ export class TemplatesService {
   constructor(
     @InjectRepository(TemplatesEntity)
     private readonly templatesRepository: Repository<TemplatesEntity>,
+    private readonly usersService: UsersService,
+    private readonly clientsService: ClientsService,
   ) {}
 
   //function to create a new template
@@ -18,6 +22,10 @@ export class TemplatesService {
     body: TemplatesCreateDTO,
   ): Promise<Response<TemplatesEntity>> {
     try {
+      await this.usersService.getUserById(body.createdBy);
+
+      await this.clientsService.getClientById(body.clientId);
+
       await this.templatesRepository.save(body);
 
       const response: Response<TemplatesEntity> = {
@@ -61,10 +69,18 @@ export class TemplatesService {
   //function to get a template by id, if not found, throw an error
   public async getTemplateById(id: string): Promise<Response<TemplatesEntity>> {
     try {
-      const template: TemplatesEntity =
-        await this.templatesRepository.findOneBy({
-          id,
-        });
+      const template: TemplatesEntity = await this.templatesRepository.findOne({
+        where: { id },
+        relations: ['client', 'user'],
+        select: {
+          id: true,
+          clientId: true,
+          templateName: true,
+          createdBy: true,
+          client: { clientName: true },
+          user: { fullName: true },
+        },
+      });
 
       if (!template) {
         throw ErrorManager.createCustomError(

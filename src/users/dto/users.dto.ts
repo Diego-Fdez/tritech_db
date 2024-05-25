@@ -62,10 +62,6 @@ export class UserUpdateDTO {
   password: string;
 
   @IsOptional()
-  @IsEnum(ROLES)
-  role: ROLES;
-
-  @IsOptional()
   @IsString()
   phone: string;
 

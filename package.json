@@ -20,7 +20,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "orm:init": "typeorm-ts-node-esm -d ./src/config/data.source.ts",
     "m:gen": "set NODE_ENV=develop && npx typeorm-ts-node-commonjs migration:generate ./src/migrations/ -d ./src/config/data.source.ts",
-    "m:run": "set NODE_ENV=develop && npx typeorm-ts-node-commonjs migration:run -d ./src/config/data.source.ts"
+    "m:run": "set NODE_ENV=develop && npx typeorm-ts-node-commonjs migration:run -d ./src/config/data.source.ts",
+    "m:rev": "set NODE_ENV=develop && npx typeorm-ts-node-commonjs migration:revert -d ./src/config/data.source.ts"
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",

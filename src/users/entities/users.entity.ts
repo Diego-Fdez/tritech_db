@@ -1,8 +1,9 @@
 import { BaseEntity } from '../../config/base.entity';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 import { UserInterface } from '../interfaces/users.interface';
 import { ROLES } from '../../constants/roles';
 import { Exclude } from 'class-transformer';
+import { TemplatesEntity } from '../../templates/entities/templates.entity';
 
 // database table
 @Entity({ name: 'users' })
@@ -20,7 +21,7 @@ export class UsersEntity extends BaseEntity implements UserInterface {
   @Column()
   web: string;
 
-  @Column({ type: 'enum', enum: ROLES })
+  @Column({ type: 'enum', enum: ROLES, default: 'BASIC' })
   role: ROLES;
 
   @Column()
@@ -28,4 +29,7 @@ export class UsersEntity extends BaseEntity implements UserInterface {
 
   @Column()
   country: string;
+
+  @OneToMany(() => TemplatesEntity, (templates) => templates.user)
+  templates: TemplatesEntity[];
 }

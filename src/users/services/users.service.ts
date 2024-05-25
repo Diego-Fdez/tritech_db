@@ -5,8 +5,9 @@ import * as bcrypt from 'bcrypt';
 import { UsersEntity } from '../entities/users.entity';
 import { UserCreateDTO, UserUpdateDTO } from '../dto';
 import { ErrorManager } from '../../utils/error.manager';
-import { Response } from 'src/utils';
+import { Response } from '../../utils';
 import { emailDomainValidator } from '../utils';
+import { ROLES } from '../../constants';
 
 @Injectable()
 export class UsersService {
@@ -36,6 +37,8 @@ export class UsersService {
 
       //hash password with bcrypt
       body.password = await bcrypt.hash(body.password, +process.env.HASH_SALT);
+
+      body.role = ROLES.BASIC;
       await this.userRepository.save(body);
 
       const response: Response<any> = {
@@ -131,6 +134,15 @@ export class UsersService {
     body: UserUpdateDTO,
   ): Promise<Response<UsersEntity>> {
     try {
+      //Check if the 'role' field is present in updateUserDto
+      if ('role' in body) {
+        // Handle the case where the user tries to update the 'role' field
+        throw ErrorManager.createCustomError(
+          `You don't have permission to update the role.`,
+          HttpStatus.FORBIDDEN,
+        );
+      }
+
       const userUpdated = await this.userRepository.update(id, body);
 
       if (userUpdated?.affected === 0) {

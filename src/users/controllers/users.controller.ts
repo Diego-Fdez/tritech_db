@@ -11,7 +11,7 @@ import {
 import { UsersService } from '../services/users.service';
 import { UserCreateDTO, UserUpdateDTO } from '../dto';
 import { EmailValidationPipe } from '../../utils';
-import { AuthGuard, OwnershipGuard, RolesGuard } from '../../auth/guards';
+import { AuthGuard, RolesGuard } from '../../auth/guards';
 import { PublicAccess, Roles } from '../../auth/decorators';
 
 @Controller('users')
@@ -50,7 +50,6 @@ export class UsersController {
   }
 
   //function to update a user by id
-  @UseGuards(OwnershipGuard)
   @Roles('BASIC')
   @Patch('/:id')
   public async updateUser(
