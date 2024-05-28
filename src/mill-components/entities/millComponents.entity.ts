@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../config/base.entity';
 import {
   MillComponentsInterface,
@@ -22,16 +22,16 @@ export class MillComponentsEntity
   @Column({ type: 'enum', enum: MillComponentsName })
   componentName: MillComponentsName;
 
-  @OneToOne(
+  @ManyToOne(
     () => SugarCaneMillsEntity,
     (sugarCaneMill) => sugarCaneMill.millComponents,
   )
   @JoinColumn({ name: 'sugar_cane_mill_id' })
   sugarCaneMill: SugarCaneMillsEntity;
 
-  @OneToOne(
+  @OneToMany(
     () => TemperatureDataEntity,
     (temperatureData) => temperatureData.millComponent,
   )
-  temperatureData: TemperatureDataEntity;
+  temperatureData: TemperatureDataEntity[];
 }

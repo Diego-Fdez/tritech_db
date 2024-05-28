@@ -8,11 +8,11 @@ export class MillComponentsCreateDTO {
 
   @IsNotEmpty()
   @IsEnum(MillComponentsType)
-  millComponentType: MillComponentsType;
+  componentType: MillComponentsType;
 
   @IsNotEmpty()
   @IsEnum(MillComponentsName)
-  millComponentName: MillComponentsName;
+  componentName: MillComponentsName;
 }
 
 export class MillComponentsUpdateDTO {
@@ -22,9 +22,9 @@ export class MillComponentsUpdateDTO {
 
   @IsOptional()
   @IsEnum(MillComponentsType)
-  millComponentType: MillComponentsType;
+  componentType: MillComponentsType;
 
   @IsOptional()
   @IsEnum(MillComponentsName)
-  millComponentName: MillComponentsName;
+  componentName: MillComponentsName;
 }

@@ -7,6 +7,7 @@ import {
   SugarCaneMillsUpdateDTO,
 } from '../dto/sugarCaneMills.dto';
 import { ErrorManager, Response } from '../../utils';
+import { TemplatesService } from '../../templates/services/templates.service';
 
 @Injectable()
 export class SugarCaneMillsService {
@@ -14,14 +15,23 @@ export class SugarCaneMillsService {
   constructor(
     @InjectRepository(SugarCaneMillsEntity)
     private readonly sugarCaneMillsRepository: Repository<SugarCaneMillsEntity>,
+    private readonly templatesService: TemplatesService,
   ) {}
 
   //function to create a new sugarCaneMills
   public async createSugarCaneMills(
     body: SugarCaneMillsCreateDTO,
   ): Promise<Response<SugarCaneMillsEntity>> {
+    const { templateId, millName, tandemCount } = body;
+
     try {
-      await this.sugarCaneMillsRepository.save(body);
+      await this.templatesService.getTemplateById(templateId);
+
+      await this.sugarCaneMillsRepository.save({
+        templateId,
+        millName: millName.toLowerCase().trim(),
+        tandemCount,
+      });
 
       const response: Response<SugarCaneMillsEntity> = {
         statusCode: HttpStatus.CREATED,
@@ -124,7 +134,13 @@ export class SugarCaneMillsService {
     id: string,
     body: SugarCaneMillsUpdateDTO,
   ): Promise<Response<SugarCaneMillsEntity>> {
+    if (body?.millName) body?.millName.toLowerCase().trim();
+
     try {
+      if (body?.templateId) {
+        await this.templatesService.getTemplateById(body?.templateId);
+      }
+
       const sugarCaneMillsUpdated = await this.sugarCaneMillsRepository.update(
         id,
         body,

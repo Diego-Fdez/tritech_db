@@ -1,4 +1,4 @@
-import { Column, Entity, OneToOne } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../config/base.entity';
 import { ClientsCreateInterface } from '../interfaces';
 import { TemplatesEntity } from '../../templates/entities/templates.entity';
@@ -14,6 +14,6 @@ export class ClientsEntity
   @Column()
   country: string;
 
-  @OneToOne(() => TemplatesEntity, (template) => template.client)
+  @OneToMany(() => TemplatesEntity, (template) => template.client)
   template: TemplatesEntity;
 }

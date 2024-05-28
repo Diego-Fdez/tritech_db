@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { MillComponentsEntity } from '../entities/millComponents.entity';
 import { MillComponentsCreateDTO, MillComponentsUpdateDTO } from '../dto';
 import { ErrorManager, Response } from '../../utils';
+import { SugarCaneMillsService } from '../../suggar-cane-mills/services/sugar-cane-mills.service';
 
 @Injectable()
 export class MillComponentsService {
@@ -11,6 +12,7 @@ export class MillComponentsService {
   constructor(
     @InjectRepository(MillComponentsEntity)
     private readonly millComponentsRepository: Repository<MillComponentsEntity>,
+    private readonly sugarCaneMillsService: SugarCaneMillsService,
   ) {}
 
   //function to create a new millComponent
@@ -18,6 +20,10 @@ export class MillComponentsService {
     body: MillComponentsCreateDTO,
   ): Promise<Response<MillComponentsEntity>> {
     try {
+      await this.sugarCaneMillsService.getSugarCaneMillsById(
+        body.sugarCaneMillId,
+      );
+
       await this.millComponentsRepository.save(body);
 
       const response: Response<MillComponentsEntity> = {
@@ -92,6 +98,12 @@ export class MillComponentsService {
     body: MillComponentsUpdateDTO,
   ): Promise<Response<MillComponentsEntity>> {
     try {
+      if (body?.sugarCaneMillId) {
+        await this.sugarCaneMillsService.getSugarCaneMillsById(
+          body.sugarCaneMillId,
+        );
+      }
+
       const millComponentUpdated = await this.millComponentsRepository.update(
         id,
         body,

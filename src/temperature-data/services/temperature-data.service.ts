@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { TemperatureDataEntity } from '../entities/temperatureData.entity';
 import { TemperatureDataCreateDTO, TemperatureDataUpdateDTO } from '../dto';
 import { ErrorManager, Response } from '../../utils';
+import { MillComponentsService } from '../../mill-components/services/mill-components.service';
 
 @Injectable()
 export class TemperatureDataService {
@@ -11,6 +12,7 @@ export class TemperatureDataService {
   constructor(
     @InjectRepository(TemperatureDataEntity)
     private readonly temperatureDataRepository: Repository<TemperatureDataEntity>,
+    private readonly millComponentsService: MillComponentsService,
   ) {}
 
   //function to create a new temperatureData
@@ -18,6 +20,10 @@ export class TemperatureDataService {
     body: TemperatureDataCreateDTO,
   ): Promise<Response<TemperatureDataEntity>> {
     try {
+      await this.millComponentsService.getMillComponentById(
+        body.millComponentId,
+      );
+
       await this.temperatureDataRepository.save(body);
 
       const response: Response<TemperatureDataEntity> = {
@@ -119,6 +125,12 @@ export class TemperatureDataService {
     body: TemperatureDataUpdateDTO,
   ): Promise<Response<TemperatureDataEntity>> {
     try {
+      if (body?.millComponentId) {
+        await this.millComponentsService.getMillComponentById(
+          body?.millComponentId,
+        );
+      }
+
       const temperatureDataUpdated =
         await this.temperatureDataRepository.update(id, body);
 

@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { TemperatureDataInterface } from '../interfaces';
 import { BaseEntity } from '../../config/base.entity';
 import { MillComponentsEntity } from '../../mill-components/entities/millComponents.entity';
@@ -20,7 +20,7 @@ export class TemperatureDataEntity
   @Column({ nullable: true })
   details: string;
 
-  @OneToOne(
+  @ManyToOne(
     () => MillComponentsEntity,
     (millComponent) => millComponent.temperatureData,
   )

@@ -21,12 +21,20 @@ export class TemplatesService {
   public async createTemplate(
     body: TemplatesCreateDTO,
   ): Promise<Response<TemplatesEntity>> {
+    const { createdBy, clientId, templateName } = body;
+
+    const data = {
+      createdBy,
+      clientId,
+      templateName: templateName.toLowerCase().trim(),
+    };
+
     try {
-      await this.usersService.getUserById(body.createdBy);
+      await this.usersService.getUserById(createdBy);
 
-      await this.clientsService.getClientById(body.clientId);
+      await this.clientsService.getClientById(clientId);
 
-      await this.templatesRepository.save(body);
+      await this.templatesRepository.save(data);
 
       const response: Response<TemplatesEntity> = {
         statusCode: HttpStatus.CREATED,

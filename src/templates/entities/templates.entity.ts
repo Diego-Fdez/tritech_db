@@ -1,11 +1,4 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToMany,
-  OneToOne,
-} from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../config/base.entity';
 import { TemplatesInterface } from '../interfaces';
 import { UsersEntity } from '../../users/entities/users.entity';
@@ -17,7 +10,7 @@ export class TemplatesEntity extends BaseEntity implements TemplatesInterface {
   @Column()
   clientId: string;
 
-  @Column()
+  @Column({ unique: true })
   templateName: string;
 
   @Column()
@@ -27,7 +20,7 @@ export class TemplatesEntity extends BaseEntity implements TemplatesInterface {
   @JoinColumn({ name: 'created_by' })
   user: UsersEntity;
 
-  @OneToOne(() => ClientsEntity, (client) => client.template)
+  @ManyToOne(() => ClientsEntity, (client) => client.template)
   @JoinColumn({ name: 'client_id' })
   client: ClientsEntity;
 

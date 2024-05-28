@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { BaseEntity } from '../../config/base.entity';
 import { SugarCaneMillsInterface } from '../interfaces';
 import { TemplatesEntity } from '../../templates/entities/templates.entity';
@@ -18,7 +18,7 @@ export class SugarCaneMillsEntity
   @Column()
   templateId: string;
 
-  @OneToOne(() => TemplatesEntity, (template) => template.sugarCaneMills)
+  @ManyToOne(() => TemplatesEntity, (template) => template.sugarCaneMills)
   @JoinColumn({ name: 'template_id' })
   template: TemplatesEntity;
 

@@ -1,9 +1,10 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { SugarCaneMillsService } from './services/sugar-cane-mills.service';
 import { SugarCaneMillsController } from './controllers/sugar-cane-mills.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SugarCaneMillsEntity } from './entities/sugarCaneMills.entity';
 
+@Global()
 @Module({
   imports: [TypeOrmModule.forFeature([SugarCaneMillsEntity])],
   providers: [SugarCaneMillsService],

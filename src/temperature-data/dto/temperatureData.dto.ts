@@ -1,6 +1,7 @@
 import {
-  IsDateString,
+  IsDate,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
 } from 'class-validator';
@@ -11,10 +12,10 @@ export class TemperatureDataCreateDTO {
   millComponentId: string;
 
   @IsNotEmpty()
-  @IsString()
+  @IsNumber()
   temperature: number;
 
-  @IsDateString()
+  @IsDate()
   @IsNotEmpty()
   date: Date;
 
@@ -29,10 +30,10 @@ export class TemperatureDataUpdateDTO {
   millComponentId: string;
 
   @IsOptional()
-  @IsString()
+  @IsNumber()
   temperature: number;
 
-  @IsDateString()
+  @IsDate()
   @IsOptional()
   date: Date;
 
