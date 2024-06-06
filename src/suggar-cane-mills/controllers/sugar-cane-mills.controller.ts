@@ -24,7 +24,7 @@ export class SugarCaneMillsController {
   //function to create a new sugar cane mill
   @Roles('BASIC')
   @Post()
-  public async createSugarCaneMill(@Body() body: SugarCaneMillsCreateDTO) {
+  public async createSugarCaneMill(@Body() body: SugarCaneMillsCreateDTO[]) {
     return await this.sugarCaneMillsService.createSugarCaneMills(body);
   }
 

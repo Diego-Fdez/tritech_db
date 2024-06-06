@@ -3,3 +3,7 @@ export interface TemplatesInterface {
   templateName: string;
   createdBy: string;
 }
+
+export interface CreateTemplateInterface {
+  id: string;
+}

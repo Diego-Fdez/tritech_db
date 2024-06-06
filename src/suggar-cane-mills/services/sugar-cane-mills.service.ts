@@ -8,6 +8,7 @@ import {
 } from '../dto/sugarCaneMills.dto';
 import { ErrorManager, Response } from '../../utils';
 import { TemplatesService } from '../../templates/services/templates.service';
+import { SugarCaneMillsResponse } from '../interfaces';
 
 @Injectable()
 export class SugarCaneMillsService {
@@ -20,22 +21,24 @@ export class SugarCaneMillsService {
 
   //function to create a new sugarCaneMills
   public async createSugarCaneMills(
-    body: SugarCaneMillsCreateDTO,
-  ): Promise<Response<SugarCaneMillsEntity>> {
-    const { templateId, millName, tandemCount } = body;
-
+    body: SugarCaneMillsCreateDTO[],
+  ): Promise<Response<SugarCaneMillsResponse[]>> {
     try {
-      await this.templatesService.getTemplateById(templateId);
+      await this.templatesService.getTemplateById(body[0].templateId);
 
-      await this.sugarCaneMillsRepository.save({
-        templateId,
-        millName: millName.toLowerCase().trim(),
-        tandemCount,
-      });
+      const result = await Promise.all(
+        body.map((b) => this.sugarCaneMillsRepository.save(b)),
+      );
+      // create an array of objects with only the id and millName properties to return to frontend
+      const dataToReturn = result.map((r) => ({
+        id: r.id,
+        millName: r.millName,
+      }));
 
-      const response: Response<SugarCaneMillsEntity> = {
+      const response: Response<SugarCaneMillsResponse[]> = {
         statusCode: HttpStatus.CREATED,
         message: 'SugarCaneMills created successfully',
+        data: dataToReturn,
       };
 
       return response;

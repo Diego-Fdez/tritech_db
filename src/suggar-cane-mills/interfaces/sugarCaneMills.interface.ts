@@ -3,3 +3,8 @@ export interface SugarCaneMillsInterface {
   templateId: string;
   tandemCount: number;
 }
+
+export interface SugarCaneMillsResponse {
+  id: string;
+  millName: string;
+}

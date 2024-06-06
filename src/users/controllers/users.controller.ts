@@ -7,7 +7,9 @@ import {
   Patch,
   Delete,
   UseGuards,
+  Response,
 } from '@nestjs/common';
+import { Response as Res } from 'express';
 import { UsersService } from '../services/users.service';
 import { UserCreateDTO, UserUpdateDTO } from '../dto';
 import { EmailValidationPipe } from '../../utils';
@@ -22,8 +24,18 @@ export class UsersController {
   //method to register a user
   @PublicAccess()
   @Post()
-  public async registerUser(@Body() body: UserCreateDTO) {
-    return await this.usersService.createUser(body);
+  public async registerUser(@Body() body: UserCreateDTO, @Response() res: Res) {
+    try {
+      const newUser = await this.usersService.createUser(body);
+
+      res.send(newUser);
+    } catch (error) {
+      res.status(error?.status || 500).send({
+        statusCode: error?.status || 500,
+        status: 'FAILED',
+        errorMessage: error?.message || error,
+      });
+    }
   }
 
   //function to get a user by email

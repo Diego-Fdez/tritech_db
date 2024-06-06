@@ -6,6 +6,7 @@ import { TemplatesCreateDTO, TemplatesUpdateDTO } from '../dto/templates.dto';
 import { ErrorManager, Response } from '../../utils';
 import { UsersService } from '../../users/services/users.service';
 import { ClientsService } from '../../clients/services/clients.service';
+import { CreateTemplateInterface } from '../interfaces';
 
 @Injectable()
 export class TemplatesService {
@@ -20,7 +21,7 @@ export class TemplatesService {
   //function to create a new template
   public async createTemplate(
     body: TemplatesCreateDTO,
-  ): Promise<Response<TemplatesEntity>> {
+  ): Promise<Response<CreateTemplateInterface>> {
     const { createdBy, clientId, templateName } = body;
 
     const data = {
@@ -34,11 +35,12 @@ export class TemplatesService {
 
       await this.clientsService.getClientById(clientId);
 
-      await this.templatesRepository.save(data);
+      const result = await this.templatesRepository.save(data);
 
-      const response: Response<TemplatesEntity> = {
+      const response: Response<CreateTemplateInterface> = {
         statusCode: HttpStatus.CREATED,
         message: 'Template has been created successfully',
+        data: { id: result?.id },
       };
 
       return response;
