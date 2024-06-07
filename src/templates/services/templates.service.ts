@@ -35,7 +35,7 @@ export class TemplatesService {
 
       await this.clientsService.getClientById(clientId);
 
-      const result = await this.templatesRepository.save(data);
+      const result: TemplatesEntity = await this.templatesRepository.save(data);
 
       const response: Response<CreateTemplateInterface> = {
         statusCode: HttpStatus.CREATED,

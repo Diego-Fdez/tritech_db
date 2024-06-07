@@ -65,10 +65,15 @@ export class UsersService {
         );
       }
 
-      const response: Response<any> = {
+      const userWithoutPassword: UsersEntity = {
+        ...user,
+        password: undefined,
+      };
+
+      const response: Response<UsersEntity> = {
         statusCode: HttpStatus.OK,
         message: 'OK',
-        data: user,
+        data: userWithoutPassword,
       };
 
       return response;
@@ -90,10 +95,17 @@ export class UsersService {
         );
       }
 
-      const res: Response<any> = {
+      const usersWithoutPassword: UsersEntity[] = users?.map(
+        (user: UsersEntity) => ({
+          ...user,
+          password: undefined,
+        }),
+      );
+
+      const res: Response<UsersEntity[]> = {
         statusCode: HttpStatus.OK,
         message: 'OK',
-        data: users,
+        data: usersWithoutPassword,
       };
 
       return res;
@@ -115,10 +127,15 @@ export class UsersService {
         );
       }
 
-      const response: Response<any> = {
+      const userWithoutPassword: UsersEntity = {
+        ...user,
+        password: undefined,
+      };
+
+      const response: Response<UsersEntity> = {
         statusCode: HttpStatus.OK,
         message: 'OK',
-        data: user,
+        data: userWithoutPassword,
       };
 
       return response;
@@ -154,10 +171,15 @@ export class UsersService {
 
       const user: UsersEntity = await this.userRepository.findOneBy({ id });
 
-      const response: Response<any> = {
+      const userWithoutPassword: UsersEntity = {
+        ...user,
+        password: undefined,
+      };
+
+      const response: Response<UsersEntity> = {
         statusCode: HttpStatus.OK,
         message: 'OK',
-        data: user,
+        data: userWithoutPassword,
       };
 
       return response;

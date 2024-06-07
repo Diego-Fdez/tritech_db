@@ -1,9 +1,11 @@
 import { HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { ClientsCreateDTO, ClientsUpdateDTO } from '../dto';
 import { ErrorManager, Response } from '../../utils';
 import { ClientsEntity } from '../entities/clients.entity';
+import { ROLES } from '../../constants';
+import { UsersService } from '../../users/services/users.service';
 
 @Injectable()
 export class ClientsService {
@@ -11,6 +13,7 @@ export class ClientsService {
   constructor(
     @InjectRepository(ClientsEntity)
     private readonly clientRepository: Repository<ClientsEntity>,
+    private readonly userService: UsersService,
   ) {}
 
   //function to create a new client
@@ -31,9 +34,31 @@ export class ClientsService {
   }
 
   //function to get all clients
-  public async getAllClients(): Promise<Response<ClientsEntity[]>> {
+  public async getAllClients(
+    userId: string,
+  ): Promise<Response<ClientsEntity[]>> {
+    let clients: ClientsEntity[];
+
     try {
-      const clients: ClientsEntity[] = await this.clientRepository.find();
+      const user = await this.userService.getUserById(userId);
+
+      if (!user?.data) {
+        throw ErrorManager.createCustomError(
+          `Cannot find user with this ID`,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      //if user is basic, only get clients from the same country
+      if (user?.data?.role === ROLES.BASIC) {
+        clients = await this.clientRepository.find({
+          where: {
+            country: user?.data?.country,
+          },
+        });
+      } else {
+        clients = await this.clientRepository.find();
+      }
 
       if (clients.length === 0) {
         throw ErrorManager.createCustomError(
@@ -85,11 +110,35 @@ export class ClientsService {
   //function to get a client by name
   public async getClientByName(
     clientName: string,
+    userId: string,
   ): Promise<Response<ClientsEntity>> {
+    let client: ClientsEntity;
+
     try {
-      const client: ClientsEntity = await this.clientRepository.findOneBy({
-        clientName,
-      });
+      const user = await this.userService.getUserById(userId);
+
+      if (!user?.data) {
+        throw ErrorManager.createCustomError(
+          `Cannot find user with this ID`,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      //if user is basic, only get clients from the same country
+      if (user?.data?.role === ROLES.BASIC) {
+        client = await this.clientRepository.findOne({
+          where: {
+            clientName: ILike(`%${clientName}%`),
+            country: user?.data?.country,
+          },
+        });
+      } else {
+        client = await this.clientRepository.findOne({
+          where: {
+            clientName: ILike(`%${clientName}%`),
+          },
+        });
+      }
 
       if (!client) {
         throw ErrorManager.createCustomError(

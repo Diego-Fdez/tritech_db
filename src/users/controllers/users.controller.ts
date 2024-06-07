@@ -43,22 +43,53 @@ export class UsersController {
   @Get('/:email')
   public async getUserByEmail(
     @Param('email', EmailValidationPipe) email: string,
+    @Response() res: Res,
   ) {
-    return await this.usersService.getUserByEmail(email);
+    try {
+      const user = await this.usersService.getUserByEmail(email);
+
+      res.send(user);
+    } catch (error) {
+      res.status(error?.status || 500).send({
+        statusCode: error?.status || 500,
+        status: 'FAILED',
+        errorMessage: error?.message || error,
+      });
+    }
   }
 
   //function to get all users
   @Roles('ADMIN')
   @Get()
-  public async getAllUsers() {
-    return await this.usersService.getAllUsers();
+  public async getAllUsers(@Response() res: Res) {
+    try {
+      const users = await this.usersService.getAllUsers();
+
+      res.send(users);
+    } catch (error) {
+      res.status(error?.status || 500).send({
+        statusCode: error?.status || 500,
+        status: 'FAILED',
+        errorMessage: error?.message || error,
+      });
+    }
   }
 
   //function to get a user by id
   @Roles('BASIC')
   @Get('/id/:id')
-  public async getUserById(@Param('id') id: string) {
-    return await this.usersService.getUserById(id);
+  public async getUserById(@Param('id') id: string, @Response() res: Res) {
+    try {
+      const user = await this.usersService.getUserById(id);
+
+      res.send(user);
+    } catch (error) {
+      res.status(error?.status || 500).send({
+        statusCode: error?.status || 500,
+        status: 'FAILED',
+        errorMessage: error?.message || error,
+      });
+    }
   }
 
   //function to update a user by id
@@ -67,14 +98,35 @@ export class UsersController {
   public async updateUser(
     @Param('id') id: string,
     @Body() body: UserUpdateDTO,
+    @Response() res: Res,
   ) {
-    return await this.usersService.updateUserById(id, body);
+    try {
+      const user = await this.usersService.updateUserById(id, body);
+
+      res.send(user);
+    } catch (error) {
+      res.status(error?.status || 500).send({
+        statusCode: error?.status || 500,
+        status: 'FAILED',
+        errorMessage: error?.message || error,
+      });
+    }
   }
 
   //function to delete a user by id
   @Roles('CREATOR')
   @Delete('/:id')
-  public async deleteUser(@Param('id') id: string) {
-    return await this.usersService.deleteUserById(id);
+  public async deleteUser(@Param('id') id: string, @Response() res: Res) {
+    try {
+      const deletedUser = await this.usersService.deleteUserById(id);
+
+      res.send(deletedUser);
+    } catch (error) {
+      res.status(error?.status || 500).send({
+        statusCode: error?.status || 500,
+        status: 'FAILED',
+        errorMessage: error?.message || error,
+      });
+    }
   }
 }
