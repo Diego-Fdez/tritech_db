@@ -65,15 +65,10 @@ export class UsersService {
         );
       }
 
-      const userWithoutPassword: UsersEntity = {
-        ...user,
-        password: undefined,
-      };
-
       const response: Response<UsersEntity> = {
         statusCode: HttpStatus.OK,
         message: 'OK',
-        data: userWithoutPassword,
+        data: user,
       };
 
       return response;

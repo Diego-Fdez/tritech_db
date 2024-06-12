@@ -111,8 +111,8 @@ export class ClientsService {
   public async getClientByName(
     clientName: string,
     userId: string,
-  ): Promise<Response<ClientsEntity>> {
-    let client: ClientsEntity;
+  ): Promise<Response<ClientsEntity[]>> {
+    let client: ClientsEntity[];
 
     try {
       const user = await this.userService.getUserById(userId);
@@ -126,14 +126,14 @@ export class ClientsService {
 
       //if user is basic, only get clients from the same country
       if (user?.data?.role === ROLES.BASIC) {
-        client = await this.clientRepository.findOne({
+        client = await this.clientRepository.find({
           where: {
             clientName: ILike(`%${clientName}%`),
             country: user?.data?.country,
           },
         });
       } else {
-        client = await this.clientRepository.findOne({
+        client = await this.clientRepository.find({
           where: {
             clientName: ILike(`%${clientName}%`),
           },
@@ -147,7 +147,7 @@ export class ClientsService {
         );
       }
 
-      const response: Response<ClientsEntity> = {
+      const response: Response<ClientsEntity[]> = {
         statusCode: HttpStatus.OK,
         message: 'OK',
         data: client,
