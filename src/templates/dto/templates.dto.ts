@@ -26,4 +26,8 @@ export class TemplatesUpdateDTO {
   @IsOptional()
   @IsString()
   createdBy: string;
+
+  @IsOptional()
+  @IsString()
+  status: string;
 }

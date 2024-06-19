@@ -3,10 +3,10 @@ import { BaseEntity } from '../../config/base.entity';
 import {
   MillComponentsInterface,
   MillComponentsName,
-  MillComponentsType,
+  MillName,
 } from '../interfaces';
-import { SugarCaneMillsEntity } from '../../suggar-cane-mills/entities/sugarCaneMills.entity';
 import { TemperatureDataEntity } from '../../temperature-data/entities/temperatureData.entity';
+import { TemplatesEntity } from '../../templates/entities/templates.entity';
 
 @Entity({ name: 'millComponents' })
 export class MillComponentsEntity
@@ -14,20 +14,20 @@ export class MillComponentsEntity
   implements MillComponentsInterface
 {
   @Column()
-  sugarCaneMillId: string;
+  templateId: string;
 
-  @Column({ type: 'enum', enum: MillComponentsType })
-  componentType: MillComponentsType;
+  @Column({ type: 'enum', enum: MillName })
+  millName: MillName;
 
   @Column({ type: 'enum', enum: MillComponentsName })
   componentName: MillComponentsName;
 
-  @ManyToOne(
-    () => SugarCaneMillsEntity,
-    (sugarCaneMill) => sugarCaneMill.millComponents,
-  )
-  @JoinColumn({ name: 'sugar_cane_mill_id' })
-  sugarCaneMill: SugarCaneMillsEntity;
+  @Column()
+  tandemNumber: number;
+
+  @ManyToOne(() => TemplatesEntity, (template) => template.millComponents)
+  @JoinColumn({ name: 'template_id' })
+  template: TemplatesEntity;
 
   @OneToMany(
     () => TemperatureDataEntity,

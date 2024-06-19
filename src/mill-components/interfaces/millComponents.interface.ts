@@ -1,6 +1,10 @@
-export enum MillComponentsType {
-  BRONCE = 'Bronce',
-  CORONA = 'Corona',
+export enum MillName {
+  MOLINO1 = 'Molino 1',
+  MOLINO2 = 'Molino 2',
+  MOLINO3 = 'Molino 3',
+  MOLINO4 = 'Molino 4',
+  MOLINO5 = 'Molino 5',
+  MOLINO6 = 'Molino 6',
 }
 
 export enum MillComponentsName {
@@ -23,7 +27,8 @@ export enum MillComponentsName {
 }
 
 export interface MillComponentsInterface {
-  sugarCaneMillId: string;
-  componentType: MillComponentsType;
+  templateId: string;
+  millName: MillName;
+  tandemNumber: number;
   componentName: MillComponentsName;
 }

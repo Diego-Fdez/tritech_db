@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { MillComponentsEntity } from '../entities/millComponents.entity';
 import { MillComponentsCreateDTO, MillComponentsUpdateDTO } from '../dto';
 import { ErrorManager, Response } from '../../utils';
-import { SugarCaneMillsService } from '../../suggar-cane-mills/services/sugar-cane-mills.service';
+import { TemplatesService } from 'src/templates/services/templates.service';
 
 @Injectable()
 export class MillComponentsService {
@@ -12,7 +12,7 @@ export class MillComponentsService {
   constructor(
     @InjectRepository(MillComponentsEntity)
     private readonly millComponentsRepository: Repository<MillComponentsEntity>,
-    private readonly sugarCaneMillsService: SugarCaneMillsService,
+    private readonly templateService: TemplatesService,
   ) {}
 
   //function to create a new millComponent
@@ -20,9 +20,7 @@ export class MillComponentsService {
     body: MillComponentsCreateDTO,
   ): Promise<Response<MillComponentsEntity>> {
     try {
-      await this.sugarCaneMillsService.getSugarCaneMillsById(
-        body.sugarCaneMillId,
-      );
+      await this.templateService.getTemplateById(body.templateId);
 
       await this.millComponentsRepository.save(body);
 
@@ -98,11 +96,7 @@ export class MillComponentsService {
     body: MillComponentsUpdateDTO,
   ): Promise<Response<MillComponentsEntity>> {
     try {
-      if (body?.sugarCaneMillId) {
-        await this.sugarCaneMillsService.getSugarCaneMillsById(
-          body.sugarCaneMillId,
-        );
-      }
+      await this.templateService.getTemplateById(body.templateId);
 
       const millComponentUpdated = await this.millComponentsRepository.update(
         id,

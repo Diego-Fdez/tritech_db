@@ -18,14 +18,8 @@ export class UsersEntity extends BaseEntity implements UserInterface {
   @Column()
   password: string;
 
-  @Column()
-  web: string;
-
   @Column({ type: 'enum', enum: ROLES, default: 'BASIC' })
   role: ROLES;
-
-  @Column()
-  phone: string;
 
   @Column()
   country: string;

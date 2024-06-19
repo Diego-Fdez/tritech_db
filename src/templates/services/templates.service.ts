@@ -117,10 +117,18 @@ export class TemplatesService {
     templateName: string,
   ): Promise<Response<TemplatesEntity>> {
     try {
-      const template: TemplatesEntity =
-        await this.templatesRepository.findOneBy({
-          templateName,
-        });
+      const template: TemplatesEntity = await this.templatesRepository.findOne({
+        where: { templateName },
+        relations: ['client', 'user'],
+        select: {
+          id: true,
+          clientId: true,
+          templateName: true,
+          createdBy: true,
+          client: { clientName: true },
+          user: { fullName: true },
+        },
+      });
 
       if (!template) {
         throw ErrorManager.createCustomError(

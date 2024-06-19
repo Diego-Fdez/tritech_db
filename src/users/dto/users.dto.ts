@@ -17,10 +17,6 @@ export class UserCreateDTO {
   @IsEmail()
   email: string;
 
-  @IsOptional()
-  @IsString()
-  web: string;
-
   @IsNotEmpty()
   @IsString()
   @MinLength(8, {
@@ -31,10 +27,6 @@ export class UserCreateDTO {
   @IsOptional()
   @IsEnum(ROLES)
   role: ROLES;
-
-  @IsNotEmpty()
-  @IsString()
-  phone: string;
 
   @IsNotEmpty()
   @IsString()
@@ -52,18 +44,10 @@ export class UserUpdateDTO {
 
   @IsOptional()
   @IsString()
-  web: string;
-
-  @IsOptional()
-  @IsString()
   @MinLength(8, {
     message: 'Password must be at least 8 characters',
   })
   password: string;
-
-  @IsOptional()
-  @IsString()
-  phone: string;
 
   @IsOptional()
   @IsString()

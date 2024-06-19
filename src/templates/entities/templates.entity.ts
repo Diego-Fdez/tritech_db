@@ -3,7 +3,7 @@ import { BaseEntity } from '../../config/base.entity';
 import { TemplatesInterface } from '../interfaces';
 import { UsersEntity } from '../../users/entities/users.entity';
 import { ClientsEntity } from '../../clients/entities/clients.entity';
-import { SugarCaneMillsEntity } from '../../suggar-cane-mills/entities/sugarCaneMills.entity';
+import { MillComponentsEntity } from '../../mill-components/entities/millComponents.entity';
 
 @Entity({ name: 'templates' })
 export class TemplatesEntity extends BaseEntity implements TemplatesInterface {
@@ -16,6 +16,9 @@ export class TemplatesEntity extends BaseEntity implements TemplatesInterface {
   @Column()
   createdBy: string;
 
+  @Column({ default: 'incomplete' })
+  status: string;
+
   @ManyToOne(() => UsersEntity, (user) => user.templates)
   @JoinColumn({ name: 'created_by' })
   user: UsersEntity;
@@ -25,8 +28,8 @@ export class TemplatesEntity extends BaseEntity implements TemplatesInterface {
   client: ClientsEntity;
 
   @OneToMany(
-    () => SugarCaneMillsEntity,
-    (sugarCaneMill) => sugarCaneMill.template,
+    () => MillComponentsEntity,
+    (millComponent) => millComponent.template,
   )
-  sugarCaneMills: SugarCaneMillsEntity[];
+  millComponents: MillComponentsEntity[];
 }

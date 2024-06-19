@@ -9,7 +9,6 @@ import { loggerOptions } from './utils';
 import { AuthModule } from './auth/auth.module';
 import { ClientsModule } from './clients/clients.module';
 import { TemplatesModule } from './templates/templates.module';
-import { SugarCaneMillsModule } from './suggar-cane-mills/sugar-cane-mills.module';
 import { MillComponentsModule } from './mill-components/mill-components.module';
 import { TemperatureDataModule } from './temperature-data/temperature-data.module';
 
@@ -25,7 +24,6 @@ import { TemperatureDataModule } from './temperature-data/temperature-data.modul
     AuthModule,
     ClientsModule,
     TemplatesModule,
-    SugarCaneMillsModule,
     MillComponentsModule,
     TemperatureDataModule,
   ],

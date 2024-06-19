@@ -1,14 +1,24 @@
-import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { MillComponentsType, MillComponentsName } from '../interfaces';
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
+import { MillName, MillComponentsName } from '../interfaces';
 
 export class MillComponentsCreateDTO {
   @IsNotEmpty()
   @IsString()
-  sugarCaneMillId: string;
+  templateId: string;
 
   @IsNotEmpty()
-  @IsEnum(MillComponentsType)
-  componentType: MillComponentsType;
+  @IsEnum(MillName)
+  millName: MillName;
+
+  @IsNotEmpty()
+  @IsNumber()
+  tandemNumber: number;
 
   @IsNotEmpty()
   @IsEnum(MillComponentsName)
@@ -18,11 +28,15 @@ export class MillComponentsCreateDTO {
 export class MillComponentsUpdateDTO {
   @IsOptional()
   @IsString()
-  sugarCaneMillId: string;
+  templateId: string;
 
   @IsOptional()
-  @IsEnum(MillComponentsType)
-  componentType: MillComponentsType;
+  @IsEnum(MillName)
+  millName: MillName;
+
+  @IsOptional()
+  @IsNumber()
+  tandemNumber: number;
 
   @IsOptional()
   @IsEnum(MillComponentsName)
