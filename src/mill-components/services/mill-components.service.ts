@@ -1,10 +1,16 @@
-import { HttpStatus, Injectable, Logger } from '@nestjs/common';
+import {
+  HttpStatus,
+  Inject,
+  Injectable,
+  Logger,
+  forwardRef,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { QueryRunner, Repository } from 'typeorm';
 import { MillComponentsEntity } from '../entities/millComponents.entity';
 import { MillComponentsCreateDTO, MillComponentsUpdateDTO } from '../dto';
 import { ErrorManager, Response } from '../../utils';
-import { TemplatesService } from 'src/templates/services/templates.service';
+import { TemplatesService } from '../../templates/services/templates.service';
 
 @Injectable()
 export class MillComponentsService {
@@ -12,17 +18,23 @@ export class MillComponentsService {
   constructor(
     @InjectRepository(MillComponentsEntity)
     private readonly millComponentsRepository: Repository<MillComponentsEntity>,
+    @Inject(forwardRef(() => TemplatesService))
     private readonly templateService: TemplatesService,
   ) {}
 
   //function to create a new millComponent
   public async createMillComponent(
-    body: MillComponentsCreateDTO,
+    body: MillComponentsCreateDTO[],
+    queryRunner?: QueryRunner,
   ): Promise<Response<MillComponentsEntity>> {
     try {
-      await this.templateService.getTemplateById(body.templateId);
+      if (queryRunner) {
+        await queryRunner.manager.save(MillComponentsEntity, body);
+      } else {
+        await this.templateService.getTemplateById(body[0]?.templateId);
 
-      await this.millComponentsRepository.save(body);
+        await this.millComponentsRepository.save(body);
+      }
 
       const response: Response<MillComponentsEntity> = {
         statusCode: HttpStatus.CREATED,

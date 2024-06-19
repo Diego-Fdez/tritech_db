@@ -5,11 +5,17 @@ import { TemplatesController } from './controllers/templates.controller';
 import { TemplatesEntity } from './entities/templates.entity';
 import { UsersService } from '../users/services/users.service';
 import { ClientsService } from '../clients/services/clients.service';
+import { MillComponentsService } from '../mill-components/services/mill-components.service';
 
 @Global()
 @Module({
   imports: [TypeOrmModule.forFeature([TemplatesEntity])],
-  providers: [TemplatesService, UsersService, ClientsService],
+  providers: [
+    TemplatesService,
+    UsersService,
+    ClientsService,
+    MillComponentsService,
+  ],
   controllers: [TemplatesController],
   exports: [TemplatesService, TypeOrmModule],
 })

@@ -24,7 +24,7 @@ export class MillComponentsController {
   @Roles('BASIC')
   @Post()
   public async createMillComponent(
-    @Body() body: MillComponentsCreateDTO,
+    @Body() body: MillComponentsCreateDTO[],
     @Response() res: Res,
   ) {
     try {

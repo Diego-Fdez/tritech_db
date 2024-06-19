@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { MillComponentsUpdateDTO } from '../../mill-components/dto';
 
 export class TemplatesCreateDTO {
   @IsNotEmpty()
@@ -12,6 +13,10 @@ export class TemplatesCreateDTO {
   @IsNotEmpty()
   @IsString()
   createdBy: string;
+
+  @IsArray()
+  @IsNotEmpty()
+  componentBody: [MillComponentsUpdateDTO];
 }
 
 export class TemplatesUpdateDTO {
@@ -30,4 +35,8 @@ export class TemplatesUpdateDTO {
   @IsOptional()
   @IsString()
   status: string;
+
+  @IsArray()
+  @IsOptional()
+  componentBody: [MillComponentsUpdateDTO];
 }

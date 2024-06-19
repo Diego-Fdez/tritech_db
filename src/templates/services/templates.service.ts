@@ -1,12 +1,19 @@
-import { HttpStatus, Injectable, Logger } from '@nestjs/common';
+import {
+  HttpStatus,
+  Inject,
+  Injectable,
+  Logger,
+  forwardRef,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DataSource, QueryRunner, Repository } from 'typeorm';
 import { TemplatesEntity } from '../entities/templates.entity';
 import { TemplatesCreateDTO, TemplatesUpdateDTO } from '../dto/templates.dto';
 import { ErrorManager, Response } from '../../utils';
 import { UsersService } from '../../users/services/users.service';
 import { ClientsService } from '../../clients/services/clients.service';
 import { CreateTemplateInterface } from '../interfaces';
+import { MillComponentsService } from '../../mill-components/services/mill-components.service';
 
 @Injectable()
 export class TemplatesService {
@@ -16,13 +23,16 @@ export class TemplatesService {
     private readonly templatesRepository: Repository<TemplatesEntity>,
     private readonly usersService: UsersService,
     private readonly clientsService: ClientsService,
+    @Inject(forwardRef(() => MillComponentsService))
+    private readonly millComponentsService: MillComponentsService,
+    private readonly dataSource: DataSource,
   ) {}
 
   //function to create a new template
   public async createTemplate(
     body: TemplatesCreateDTO,
   ): Promise<Response<CreateTemplateInterface>> {
-    const { createdBy, clientId, templateName } = body;
+    const { createdBy, clientId, templateName, componentBody } = body;
 
     const data = {
       createdBy,
@@ -30,23 +40,44 @@ export class TemplatesService {
       templateName: templateName.toLowerCase().trim(),
     };
 
+    const queryRunner: QueryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
     try {
       await this.usersService.getUserById(createdBy);
 
       await this.clientsService.getClientById(clientId);
 
-      const result: TemplatesEntity = await this.templatesRepository.save(data);
+      const result: TemplatesEntity = await queryRunner.manager.save(
+        TemplatesEntity,
+        data,
+      );
 
-      const response: Response<CreateTemplateInterface> = {
+      const newMillComponents = componentBody?.map((component) => ({
+        ...component,
+        templateId: result?.id,
+      }));
+
+      await this.millComponentsService.createMillComponent(
+        newMillComponents,
+        queryRunner,
+      );
+
+      await queryRunner.commitTransaction();
+
+      const response: Response<TemplatesEntity> = {
         statusCode: HttpStatus.CREATED,
         message: 'Template has been created successfully',
-        data: { id: result?.id },
       };
 
       return response;
     } catch (error) {
+      await queryRunner.rollbackTransaction();
       this.logger.error(`Error creating a new template: ${error}`);
       throw ErrorManager.createSignatureError(error.message);
+    } finally {
+      await queryRunner.release();
     }
   }
 
