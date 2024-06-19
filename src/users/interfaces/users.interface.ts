@@ -7,6 +7,7 @@ export interface UserInterface {
   password: string;
   country: string;
   role: ROLES;
+  isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

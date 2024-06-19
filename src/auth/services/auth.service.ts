@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import { UsersEntity } from '../../users/entities/users.entity';
@@ -12,18 +12,29 @@ export class AuthService {
   constructor(private readonly userService: UsersService) {}
   // validate user
   public async validateUser(email: string, password: string) {
-    // find user in db
-    const userByEmail = await this.userService.getUserByEmail(email);
+    try {
+      // find user in db
+      const userByEmail = await this.userService.getUserByEmail(email);
 
-    // compare passwords
-    if (userByEmail) {
-      const match = await bcrypt.compare(password, userByEmail?.data?.password);
+      if (!userByEmail?.data?.isActive)
+        throw new UnauthorizedException('User is not active');
 
-      // if match return user
-      if (match) return userByEmail;
+      // compare passwords
+      if (userByEmail) {
+        const match = await bcrypt.compare(
+          password,
+          userByEmail?.data?.password,
+        );
+
+        // if match return user
+        if (match) return userByEmail;
+      }
+
+      return null;
+    } catch (error) {
+      this.logger.error(`Error login: ${error}`);
+      throw ErrorManager.createSignatureError(error.message);
     }
-
-    return null;
   }
 
   // sign jwt token

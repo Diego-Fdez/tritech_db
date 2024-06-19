@@ -1,4 +1,5 @@
 import {
+  IsBoolean,
   IsEmail,
   IsEnum,
   IsNotEmpty,
@@ -52,4 +53,8 @@ export class UserUpdateDTO {
   @IsOptional()
   @IsString()
   country: string;
+
+  @IsOptional()
+  @IsBoolean()
+  isActive: boolean;
 }

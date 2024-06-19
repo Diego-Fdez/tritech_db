@@ -24,6 +24,9 @@ export class UsersEntity extends BaseEntity implements UserInterface {
   @Column()
   country: string;
 
+  @Column({ default: true })
+  isActive: boolean;
+
   @OneToMany(() => TemplatesEntity, (templates) => templates.user)
   templates: TemplatesEntity[];
 }
