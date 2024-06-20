@@ -3,4 +3,5 @@ export interface TemperatureDataInterface {
   temperature: number;
   date: Date;
   details?: string;
+  isSent: boolean;
 }

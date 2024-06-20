@@ -1,4 +1,5 @@
 import {
+  IsBoolean,
   IsDate,
   IsNotEmpty,
   IsNumber,
@@ -40,4 +41,8 @@ export class TemperatureDataUpdateDTO {
   @IsOptional()
   @IsString()
   details: string;
+
+  @IsOptional()
+  @IsBoolean()
+  isSent: boolean;
 }

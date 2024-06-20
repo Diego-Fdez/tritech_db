@@ -20,6 +20,9 @@ export class TemperatureDataEntity
   @Column({ nullable: true })
   details: string;
 
+  @Column({ default: false })
+  isSent: boolean;
+
   @ManyToOne(
     () => MillComponentsEntity,
     (millComponent) => millComponent.temperatureData,
