@@ -122,6 +122,13 @@ export class UsersService {
         );
       }
 
+      if (!user.isActive) {
+        throw ErrorManager.createCustomError(
+          `User with id: ${id} is not active`,
+          HttpStatus.FORBIDDEN,
+        );
+      }
+
       const userWithoutPassword: UsersEntity = {
         ...user,
         password: undefined,
@@ -187,9 +194,11 @@ export class UsersService {
   //function to delete a user by id, if not found, throw an error
   public async deleteUserById(id: string): Promise<Response<any>> {
     try {
-      const user = await this.userRepository.delete({ id });
+      const updateUser = await this.userRepository.update(id, {
+        isActive: false,
+      });
 
-      if (user?.affected === 0) {
+      if (updateUser?.affected === 0) {
         throw ErrorManager.createCustomError(
           `User with id: ${id} not found`,
           HttpStatus.NOT_FOUND,
@@ -197,8 +206,8 @@ export class UsersService {
       }
 
       const response: Response<any> = {
-        statusCode: HttpStatus.NO_CONTENT,
-        message: 'User deleted',
+        statusCode: HttpStatus.OK,
+        message: 'User deactivate',
       };
 
       return response;
