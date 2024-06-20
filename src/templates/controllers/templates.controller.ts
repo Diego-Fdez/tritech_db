@@ -74,28 +74,6 @@ export class TemplatesController {
     }
   }
 
-  //function to get a template by templateName
-  @Roles('BASIC')
-  @Get('/:name')
-  public async getTemplateByName(
-    @Param('name') templateName: string,
-    @Response() res: Res,
-  ) {
-    try {
-      const template = await this.templatesService.getTemplateByName(
-        templateName,
-      );
-
-      res.send(template);
-    } catch (error) {
-      res.status(error?.status || 500).send({
-        statusCode: error?.status || 500,
-        status: 'FAILED',
-        errorMessage: error?.message || error,
-      });
-    }
-  }
-
   //function to update a template by ID
   @Roles('BASIC')
   @Patch('/:id')

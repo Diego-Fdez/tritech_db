@@ -12,8 +12,9 @@ import { TemplatesCreateDTO, TemplatesUpdateDTO } from '../dto/templates.dto';
 import { ErrorManager, Response } from '../../utils';
 import { UsersService } from '../../users/services/users.service';
 import { ClientsService } from '../../clients/services/clients.service';
-import { CreateTemplateInterface } from '../interfaces';
+import { CreateTemplateInterface, TemplateTypesEnum } from '../interfaces';
 import { MillComponentsService } from '../../mill-components/services/mill-components.service';
+import { MillComponentsInterface } from '../../mill-components/interfaces';
 
 @Injectable()
 export class TemplatesService {
@@ -32,12 +33,14 @@ export class TemplatesService {
   public async createTemplate(
     body: TemplatesCreateDTO,
   ): Promise<Response<CreateTemplateInterface>> {
-    const { createdBy, clientId, templateName, componentBody } = body;
+    const { createdBy, clientId, templateName, templateType, componentBody } =
+      body;
 
     const data = {
       createdBy,
       clientId,
       templateName: templateName.toLowerCase().trim(),
+      templateType,
     };
 
     const queryRunner: QueryRunner = this.dataSource.createQueryRunner();
@@ -54,15 +57,19 @@ export class TemplatesService {
         data,
       );
 
-      const newMillComponents = componentBody?.map((component) => ({
-        ...component,
-        templateId: result?.id,
-      }));
+      if (templateType === TemplateTypesEnum.TEMPERATURAS_BRONCES) {
+        const newMillComponents: MillComponentsInterface[] = componentBody?.map(
+          (component: MillComponentsInterface) => ({
+            ...component,
+            templateId: result?.id,
+          }),
+        );
 
-      await this.millComponentsService.createMillComponent(
-        newMillComponents,
-        queryRunner,
-      );
+        await this.millComponentsService.createMillComponent(
+          newMillComponents,
+          queryRunner,
+        );
+      }
 
       await queryRunner.commitTransaction();
 
@@ -139,44 +146,6 @@ export class TemplatesService {
       return response;
     } catch (error) {
       this.logger.error(`Error getting a template by id: ${error}`);
-      throw error;
-    }
-  }
-
-  //function to get a template by name, if not found, throw an error
-  public async getTemplateByName(
-    templateName: string,
-  ): Promise<Response<TemplatesEntity>> {
-    try {
-      const template: TemplatesEntity = await this.templatesRepository.findOne({
-        where: { templateName },
-        relations: ['client', 'user'],
-        select: {
-          id: true,
-          clientId: true,
-          templateName: true,
-          createdBy: true,
-          client: { clientName: true },
-          user: { fullName: true },
-        },
-      });
-
-      if (!template) {
-        throw ErrorManager.createCustomError(
-          `Template with name: ${templateName} not found`,
-          HttpStatus.NOT_FOUND,
-        );
-      }
-
-      const response: Response<TemplatesEntity> = {
-        statusCode: HttpStatus.OK,
-        message: 'Template found successfully',
-        data: template,
-      };
-
-      return response;
-    } catch (error) {
-      this.logger.error(`Error getting a template by name: ${error}`);
       throw error;
     }
   }

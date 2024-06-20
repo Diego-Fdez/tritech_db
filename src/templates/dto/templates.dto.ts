@@ -1,5 +1,11 @@
-import { IsArray, IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { MillComponentsUpdateDTO } from '../../mill-components/dto';
+import {
+  IsArray,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
+import { TemplateTypesEnum } from '../interfaces';
 
 export class TemplatesCreateDTO {
   @IsNotEmpty()
@@ -16,7 +22,11 @@ export class TemplatesCreateDTO {
 
   @IsArray()
   @IsNotEmpty()
-  componentBody: [MillComponentsUpdateDTO];
+  componentBody: object[];
+
+  @IsEnum(TemplateTypesEnum)
+  @IsNotEmpty()
+  templateType: TemplateTypesEnum;
 }
 
 export class TemplatesUpdateDTO {
@@ -38,5 +48,9 @@ export class TemplatesUpdateDTO {
 
   @IsArray()
   @IsOptional()
-  componentBody: [MillComponentsUpdateDTO];
+  componentBody: object[];
+
+  @IsEnum(TemplateTypesEnum)
+  @IsOptional()
+  templateType: TemplateTypesEnum;
 }

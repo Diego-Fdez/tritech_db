@@ -1,6 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../config/base.entity';
-import { TemplatesInterface } from '../interfaces';
+import { TemplateTypesEnum, TemplatesInterface } from '../interfaces';
 import { UsersEntity } from '../../users/entities/users.entity';
 import { ClientsEntity } from '../../clients/entities/clients.entity';
 import { MillComponentsEntity } from '../../mill-components/entities/millComponents.entity';
@@ -18,6 +18,9 @@ export class TemplatesEntity extends BaseEntity implements TemplatesInterface {
 
   @Column({ default: 'incomplete' })
   status: string;
+
+  @Column({ type: 'enum', enum: TemplateTypesEnum })
+  templateType: TemplateTypesEnum;
 
   @ManyToOne(() => UsersEntity, (user) => user.templates)
   @JoinColumn({ name: 'created_by' })
