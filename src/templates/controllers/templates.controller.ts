@@ -74,6 +74,27 @@ export class TemplatesController {
     }
   }
 
+  @Roles('BASIC')
+  @Get('/clientId/:clientId')
+  public async getTemplatesByClientId(
+    @Param('clientId') clientId: string,
+    @Response() res: Res,
+  ) {
+    try {
+      const templates = await this.templatesService.getTemplatesByClientId(
+        clientId,
+      );
+
+      res.send(templates);
+    } catch (error) {
+      res.status(error?.status || 500).send({
+        statusCode: error?.status || 500,
+        status: 'FAILED',
+        errorMessage: error?.message || error,
+      });
+    }
+  }
+
   //function to update a template by ID
   @Roles('BASIC')
   @Patch('/:id')

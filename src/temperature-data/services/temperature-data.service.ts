@@ -5,6 +5,7 @@ import { TemperatureDataEntity } from '../entities/temperatureData.entity';
 import { TemperatureDataCreateDTO, TemperatureDataUpdateDTO } from '../dto';
 import { ErrorManager, Response } from '../../utils';
 import { MillComponentsService } from '../../mill-components/services/mill-components.service';
+import { TemperaturesSuccessResponseInterface } from '../interfaces';
 
 @Injectable()
 export class TemperatureDataService {
@@ -17,18 +18,22 @@ export class TemperatureDataService {
 
   //function to create a new temperatureData
   public async createTemperatureData(
-    body: TemperatureDataCreateDTO,
-  ): Promise<Response<TemperatureDataEntity>> {
+    body: TemperatureDataCreateDTO[],
+  ): Promise<Response<TemperaturesSuccessResponseInterface>> {
     try {
       await this.millComponentsService.getMillComponentById(
-        body.millComponentId,
+        body[0].millComponentId,
       );
 
-      await this.temperatureDataRepository.save(body);
+      const temperaturesResponse: TemperatureDataEntity[] =
+        await this.temperatureDataRepository.save(body);
 
-      const response: Response<TemperatureDataEntity> = {
+      const temperaturesId: string = temperaturesResponse[0]?.id;
+
+      const response: Response<TemperaturesSuccessResponseInterface> = {
         statusCode: HttpStatus.CREATED,
         message: 'Temperature Data created successfully',
+        data: { id: temperaturesId },
       };
 
       return response;

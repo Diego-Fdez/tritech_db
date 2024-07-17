@@ -119,7 +119,8 @@ export class TemplatesService {
     try {
       const template: TemplatesEntity = await this.templatesRepository.findOne({
         where: { id },
-        relations: ['client', 'user'],
+        order: { millComponents: { millName: 'ASC' } },
+        relations: ['client', 'user', 'millComponents'],
         select: {
           id: true,
           clientId: true,
@@ -127,6 +128,12 @@ export class TemplatesService {
           createdBy: true,
           client: { clientName: true },
           user: { fullName: true },
+          millComponents: {
+            id: true,
+            componentName: true,
+            millName: true,
+            tandemNumber: true,
+          },
         },
       });
 
@@ -146,6 +153,34 @@ export class TemplatesService {
       return response;
     } catch (error) {
       this.logger.error(`Error getting a template by id: ${error}`);
+      throw error;
+    }
+  }
+
+  //function to get all templates by ClientId
+  public async getTemplatesByClientId(
+    clientId: string,
+  ): Promise<Response<TemplatesEntity[]>> {
+    try {
+      const templates: TemplatesEntity[] =
+        await this.templatesRepository.findBy({ clientId });
+
+      if (templates.length === 0) {
+        throw ErrorManager.createCustomError(
+          `No templates found for client with id: ${clientId}`,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      const response: Response<TemplatesEntity[]> = {
+        statusCode: HttpStatus.OK,
+        message: 'Templates found successfully',
+        data: templates,
+      };
+
+      return response;
+    } catch (error) {
+      this.logger.error(`Error getting templates by client id: ${error}`);
       throw error;
     }
   }

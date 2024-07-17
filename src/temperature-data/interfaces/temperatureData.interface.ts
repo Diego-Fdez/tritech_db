@@ -5,3 +5,7 @@ export interface TemperatureDataInterface {
   details?: string;
   isSent: boolean;
 }
+
+export interface TemperaturesSuccessResponseInterface {
+  id: string;
+}

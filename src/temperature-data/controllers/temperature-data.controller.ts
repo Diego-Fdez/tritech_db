@@ -26,7 +26,7 @@ export class TemperatureDataController {
   @Roles('BASIC')
   @Post()
   public async createTemperatureData(
-    @Body() body: TemperatureDataCreateDTO,
+    @Body() body: TemperatureDataCreateDTO[],
     @Response() res: Res,
   ) {
     try {
