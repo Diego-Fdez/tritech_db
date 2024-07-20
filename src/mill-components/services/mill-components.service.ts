@@ -38,7 +38,7 @@ export class MillComponentsService {
 
       const response: Response<MillComponentsEntity> = {
         statusCode: HttpStatus.CREATED,
-        message: 'Mill Component created successfully',
+        message: 'Molino creado satisfactoriamente',
       };
 
       return response;
@@ -56,14 +56,14 @@ export class MillComponentsService {
 
       if (millComponents?.length === 0) {
         throw ErrorManager.createCustomError(
-          'No mill components found',
+          'No hay molinos registrados.',
           HttpStatus.NOT_FOUND,
         );
       }
 
       const response: Response<MillComponentsEntity[]> = {
         statusCode: HttpStatus.OK,
-        message: 'Mill components found successfully',
+        message: 'OK',
         data: millComponents,
       };
 
@@ -84,14 +84,14 @@ export class MillComponentsService {
 
       if (!millComponent) {
         throw ErrorManager.createCustomError(
-          `Mill Component with id: ${id} not found`,
+          `No se encontraron molinos con el ID: ${id}`,
           HttpStatus.NOT_FOUND,
         );
       }
 
       const response: Response<MillComponentsEntity> = {
         statusCode: HttpStatus.OK,
-        message: 'Mill Component found successfully',
+        message: 'OK',
         data: millComponent,
       };
 
@@ -117,14 +117,14 @@ export class MillComponentsService {
 
       if (millComponentUpdated.affected === 0) {
         throw ErrorManager.createCustomError(
-          `Mill Component with id: ${id} not found`,
+          `No se encontraron molinos con el ID: ${id}`,
           HttpStatus.NOT_FOUND,
         );
       }
 
       const response: Response<MillComponentsEntity> = {
         statusCode: HttpStatus.OK,
-        message: 'Mill Component updated successfully',
+        message: 'Molino actualizado correctamente',
       };
 
       return response;
@@ -143,14 +143,14 @@ export class MillComponentsService {
 
       if (millComponentDeleted.affected === 0) {
         throw ErrorManager.createCustomError(
-          `Mill Component with id: ${id} not found`,
+          `No se encontraron molinos con el ID: ${id}`,
           HttpStatus.NOT_FOUND,
         );
       }
 
       const response: Response<any> = {
         statusCode: HttpStatus.NO_CONTENT,
-        message: 'Mill Component deleted successfully',
+        message: 'Molino eliminado correctamente',
       };
 
       return response;

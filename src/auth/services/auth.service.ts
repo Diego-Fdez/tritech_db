@@ -17,7 +17,7 @@ export class AuthService {
       const userByEmail = await this.userService.getUserByEmail(email);
 
       if (!userByEmail?.data?.isActive)
-        throw new UnauthorizedException('User is not active');
+        throw new UnauthorizedException('El usuario no esta activo');
 
       // compare passwords
       if (userByEmail) {

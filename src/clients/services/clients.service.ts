@@ -1,6 +1,6 @@
 import { HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ILike, Repository } from 'typeorm';
+import { ILike, Repository, Not } from 'typeorm';
 import { ClientsCreateDTO, ClientsUpdateDTO } from '../dto';
 import { ErrorManager, Response } from '../../utils';
 import { ClientsEntity } from '../entities/clients.entity';
@@ -23,7 +23,7 @@ export class ClientsService {
 
       const response: Response<any> = {
         statusCode: HttpStatus.CREATED,
-        message: 'Client has been created successfully',
+        message: 'Cliente creado satisfactoriamente',
       };
 
       return response;
@@ -44,7 +44,7 @@ export class ClientsService {
 
       if (!user?.data) {
         throw ErrorManager.createCustomError(
-          `Cannot find user with this ID`,
+          `El usuario con ID: ${userId} no existe.`,
           HttpStatus.NOT_FOUND,
         );
       }
@@ -55,14 +55,30 @@ export class ClientsService {
           where: {
             country: user?.data?.country,
           },
+          order: {
+            clientName: 'ASC',
+          },
         });
       } else {
-        clients = await this.clientRepository.find();
+        const countryClients = await this.clientRepository.find({
+          where: {
+            country: user?.data?.country,
+          },
+          order: {
+            clientName: 'ASC',
+          },
+        });
+
+        const otherClients = await this.clientRepository.findBy({
+          country: Not(user?.data?.country),
+        });
+
+        clients = [...countryClients, ...otherClients];
       }
 
       if (clients.length === 0) {
         throw ErrorManager.createCustomError(
-          'No clients found',
+          'No hay clientes registrados',
           HttpStatus.NOT_FOUND,
         );
       }
@@ -89,7 +105,7 @@ export class ClientsService {
 
       if (!client) {
         throw ErrorManager.createCustomError(
-          `Client with id: ${id} not found`,
+          `No encontramos el cliente con el ID: ${id}.`,
           HttpStatus.NOT_FOUND,
         );
       }
@@ -119,7 +135,7 @@ export class ClientsService {
 
       if (!user?.data) {
         throw ErrorManager.createCustomError(
-          `Cannot find user with this ID`,
+          `El usuario con ID: ${userId} no existe.`,
           HttpStatus.NOT_FOUND,
         );
       }
@@ -142,7 +158,7 @@ export class ClientsService {
 
       if (!client) {
         throw ErrorManager.createCustomError(
-          `Client with name: ${clientName} not found`,
+          `No encontramos clientes con el nombre: ${clientName}.`,
           HttpStatus.NOT_FOUND,
         );
       }
@@ -170,7 +186,7 @@ export class ClientsService {
 
       if (clientUpdated?.affected === 0) {
         throw ErrorManager.createCustomError(
-          `Client with id: ${id} not found`,
+          `Cliente con el ID: ${id}, no existe.`,
           HttpStatus.NOT_FOUND,
         );
       }
@@ -179,7 +195,7 @@ export class ClientsService {
 
       const response: Response<ClientsEntity> = {
         statusCode: HttpStatus.OK,
-        message: 'Client has been updated successfully',
+        message: 'Cliente actualizado correctamente',
         data: client,
       };
 
@@ -197,14 +213,14 @@ export class ClientsService {
 
       if (clientDeleted?.affected === 0) {
         throw ErrorManager.createCustomError(
-          `Client with id: ${id} not found`,
+          `Cliente con el ID: ${id}, no existe.`,
           HttpStatus.NOT_FOUND,
         );
       }
 
       const response: Response<any> = {
         statusCode: HttpStatus.NO_CONTENT,
-        message: 'Client deleted',
+        message: 'Cliente eliminado',
       };
 
       return response;

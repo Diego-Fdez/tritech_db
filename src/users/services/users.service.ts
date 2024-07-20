@@ -30,7 +30,7 @@ export class UsersService {
 
       if (userExists) {
         throw ErrorManager.createCustomError(
-          'User already exists',
+          'El usuario ya existe',
           HttpStatus.CONFLICT,
         );
       }
@@ -43,7 +43,7 @@ export class UsersService {
 
       const response: Response<any> = {
         statusCode: HttpStatus.CREATED,
-        message: 'User has been created successfully',
+        message: 'El usuario se creó con éxito',
       };
 
       return response;
@@ -60,7 +60,7 @@ export class UsersService {
 
       if (!user) {
         throw ErrorManager.createCustomError(
-          `User with email: ${email} not found`,
+          `No encontramos el usuario con el correo: ${email}.`,
           HttpStatus.NOT_FOUND,
         );
       }
@@ -85,7 +85,7 @@ export class UsersService {
 
       if (users.length === 0) {
         throw ErrorManager.createCustomError(
-          'No users found',
+          'No se encontraron usuarios registrados.',
           HttpStatus.NOT_FOUND,
         );
       }
@@ -117,14 +117,14 @@ export class UsersService {
 
       if (!user) {
         throw ErrorManager.createCustomError(
-          `User with id: ${id} not found`,
+          `No encontramos el usuario con el ID: ${id}.`,
           HttpStatus.NOT_FOUND,
         );
       }
 
       if (!user.isActive) {
         throw ErrorManager.createCustomError(
-          `User with id: ${id} is not active`,
+          `Este usuario con ID: ${id}, se encuentra inactivo.`,
           HttpStatus.FORBIDDEN,
         );
       }
@@ -157,7 +157,7 @@ export class UsersService {
       if ('role' in body) {
         // Handle the case where the user tries to update the 'role' field
         throw ErrorManager.createCustomError(
-          `You don't have permission to update the role.`,
+          `No tienes permisos Administrativos para modificar el ROLE`,
           HttpStatus.FORBIDDEN,
         );
       }
@@ -166,7 +166,7 @@ export class UsersService {
 
       if (userUpdated?.affected === 0) {
         throw ErrorManager.createCustomError(
-          `User with id: ${id} not found`,
+          `No encontramos el usuario con el ID: ${id}.`,
           HttpStatus.NOT_FOUND,
         );
       }
@@ -200,7 +200,7 @@ export class UsersService {
 
       if (updateUser?.affected === 0) {
         throw ErrorManager.createCustomError(
-          `User with id: ${id} not found`,
+          `No encontramos el usuario con el ID: ${id}.`,
           HttpStatus.NOT_FOUND,
         );
       }

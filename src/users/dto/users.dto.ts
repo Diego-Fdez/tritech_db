@@ -21,7 +21,7 @@ export class UserCreateDTO {
   @IsNotEmpty()
   @IsString()
   @MinLength(8, {
-    message: 'Password must be at least 8 characters',
+    message: 'La contraseña debe tener al menos 8 caracteres',
   })
   password: string;
 
@@ -46,7 +46,7 @@ export class UserUpdateDTO {
   @IsOptional()
   @IsString()
   @MinLength(8, {
-    message: 'Password must be at least 8 characters',
+    message: 'La contraseña debe tener al menos 8 caracteres',
   })
   password: string;
 

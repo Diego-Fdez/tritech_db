@@ -15,6 +15,7 @@ import { ClientsService } from '../../clients/services/clients.service';
 import { CreateTemplateInterface, TemplateTypesEnum } from '../interfaces';
 import { MillComponentsService } from '../../mill-components/services/mill-components.service';
 import { MillComponentsInterface } from '../../mill-components/interfaces';
+import { filterComponents } from 'src/utils/filteredTemplates';
 
 @Injectable()
 export class TemplatesService {
@@ -119,7 +120,7 @@ export class TemplatesService {
     try {
       const template: TemplatesEntity = await this.templatesRepository.findOne({
         where: { id },
-        order: { millComponents: { millName: 'ASC' } },
+        order: { millComponents: { millName: 'ASC', tandemNumber: 'ASC' } },
         relations: ['client', 'user', 'millComponents'],
         select: {
           id: true,
@@ -144,10 +145,19 @@ export class TemplatesService {
         );
       }
 
+      const componentOrder = filterComponents(template?.millComponents);
+
+      const { millComponents, ...rest } = template;
+
+      const templateWithOrderComponents = {
+        ...rest,
+        millComponents: componentOrder,
+      };
+
       const response: Response<TemplatesEntity> = {
         statusCode: HttpStatus.OK,
         message: 'Template found successfully',
-        data: template,
+        data: templateWithOrderComponents,
       };
 
       return response;
