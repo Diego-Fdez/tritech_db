@@ -17,8 +17,8 @@ const componentOrder: string[] = [
   'Corona 4ta maza LS',
 ];
 
-export function filterComponents(arr) {
-  return arr.sort((a, b) => {
+export function filterComponents(arr: any) {
+  return arr.sort((a: any, b: any) => {
     // Primero ordenamos por millName
     if (a.millName < b.millName) return -1;
     if (a.millName > b.millName) return 1;

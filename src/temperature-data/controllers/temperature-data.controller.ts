@@ -8,6 +8,7 @@ import {
   Post,
   UseGuards,
   Response,
+  Query,
 } from '@nestjs/common';
 import { Response as Res } from 'express';
 import { TemperatureDataService } from '../services/temperature-data.service';
@@ -63,14 +64,44 @@ export class TemperatureDataController {
 
   //function to get a temperature data by ID
   @Roles('BASIC')
-  @Get('/:id')
-  public async getTemperatureDataById(
-    @Param('id') id: string,
+  @Get('/:date')
+  public async getTheLastTemperaturesDataByDate(
+    @Param('date') date: string,
+    @Query('templateId') templateId: string,
     @Response() res: Res,
   ) {
     try {
       const temperatureData =
-        await this.temperatureDataService.getTemperatureDataById(id);
+        await this.temperatureDataService.getTheLastTemperaturesDataByDate(
+          date,
+          templateId,
+        );
+      res.send(temperatureData);
+    } catch (error) {
+      res.status(error?.status || 500).send({
+        statusCode: error?.status || 500,
+        status: 'FAILED',
+        errorMessage: error?.message || error,
+      });
+    }
+  }
+
+  //function to get temperatures by date range
+  @Roles('BASIC')
+  @Get('/templateId/:templateId')
+  public async getTemperaturesByDateRange(
+    @Param('templateId') templateId: string,
+    @Query('startDate') startDate: Date,
+    @Query('endDate') endDate: Date,
+    @Response() res: Res,
+  ) {
+    try {
+      const temperatureData =
+        await this.temperatureDataService.getTemperatureDataByDateRange(
+          startDate,
+          endDate,
+          templateId,
+        );
 
       res.send(temperatureData);
     } catch (error) {
