@@ -13,8 +13,8 @@ import { MillComponentsModule } from './mill-components/mill-components.module';
 import { TemperatureDataModule } from './temperature-data/temperature-data.module';
 import { FormModule } from './form/form.module';
 import { QuestionModule } from './question/question.module';
-import { AnswerOptionModule } from './answer-option/answer-option.module';
 import { AnswerModule } from './answer/answer.module';
+import { ResponsesModule } from './responses/responses.module';
 
 @Module({
   imports: [
@@ -32,8 +32,8 @@ import { AnswerModule } from './answer/answer.module';
     TemperatureDataModule,
     FormModule,
     QuestionModule,
-    AnswerOptionModule,
     AnswerModule,
+    ResponsesModule,
   ],
   providers: [],
   controllers: [],

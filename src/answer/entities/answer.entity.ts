@@ -1,21 +1,17 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  ManyToOne,
-  OneToMany,
-} from 'typeorm';
-import { BaseEntity } from 'src/config/base.entity';
+import { Entity, Column, ManyToOne } from 'typeorm';
+import { BaseEntity } from '../../config/base.entity';
 import { AnswerInterface } from '../interfaces';
+import { QuestionEntity } from '../../question/entities/question.entity';
+import { ResponsesEntity } from '../../responses/entities/responses.entity';
 
-@Entity()
-export class Answer extends BaseEntity implements AnswerInterface {
+@Entity({ name: 'answer' })
+export class AnswerEntity extends BaseEntity implements AnswerInterface {
   @Column()
   answerValue: string;
 
-  // @ManyToOne(() => Form, form => form.answers)
-  // form: Form;
+  @ManyToOne(() => QuestionEntity, (question) => question.answers)
+  question: QuestionEntity;
 
-  // @ManyToOne(() => Question, question => question.answers)
-  // question: Question;
+  @ManyToOne(() => ResponsesEntity, (response) => response.answers)
+  response: ResponsesEntity;
 }

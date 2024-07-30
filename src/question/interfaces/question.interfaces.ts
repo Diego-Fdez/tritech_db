@@ -1,5 +1,5 @@
 export interface QuestionInterface {
-  type: string;
-  text: string;
+  typeQuestion: string;
+  textQuestion: string;
   order: number;
 }

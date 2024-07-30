@@ -1,9 +1,11 @@
-import { BaseEntity } from '../../config/base.entity';
 import { Column, Entity, OneToMany } from 'typeorm';
+import { Exclude } from 'class-transformer';
+import { BaseEntity } from '../../config/base.entity';
 import { UserInterface } from '../interfaces/users.interface';
 import { ROLES } from '../../constants/roles';
-import { Exclude } from 'class-transformer';
 import { TemplatesEntity } from '../../templates/entities/templates.entity';
+import { FormEntity } from '../../form/entities/form.entity';
+import { ResponsesEntity } from '../../responses/entities/responses.entity';
 
 // database table
 @Entity({ name: 'users' })
@@ -29,4 +31,10 @@ export class UsersEntity extends BaseEntity implements UserInterface {
 
   @OneToMany(() => TemplatesEntity, (templates) => templates.user)
   templates: TemplatesEntity[];
+
+  @OneToMany(() => FormEntity, (form) => form.createdBy)
+  forms: FormEntity[];
+
+  @OneToMany(() => ResponsesEntity, (response) => response.user)
+  responses: ResponsesEntity[];
 }

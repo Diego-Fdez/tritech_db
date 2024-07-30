@@ -17,11 +17,8 @@ export class TemperatureDataEntity
   @Column()
   date: Date;
 
-  @Column({ nullable: true })
-  details: string;
-
-  @Column({ default: false })
-  isSent: boolean;
+  @Column({ type: 'uuid' })
+  temperatureId: string;
 
   @ManyToOne(
     () => MillComponentsEntity,
