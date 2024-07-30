@@ -28,7 +28,7 @@ export class TemperatureDataService {
       const temperaturesResponse: TemperatureDataEntity[] =
         await this.temperatureDataRepository.save(body);
 
-      const temperaturesId: string = temperaturesResponse[0]?.id;
+      const temperaturesId: string = temperaturesResponse[0]?.temperatureId;
 
       const response: Response<TemperaturesSuccessResponseInterface> = {
         statusCode: HttpStatus.CREATED,
@@ -54,8 +54,8 @@ export class TemperatureDataService {
           select: {
             id: true,
             createdAt: true,
-            isSent: true,
             temperature: true,
+            temperatureId: true,
             millComponent: {
               millName: true,
               tandemNumber: true,
@@ -63,6 +63,7 @@ export class TemperatureDataService {
               componentName: true,
             },
           },
+          order: { createdAt: 'DESC' },
         });
 
       if (temperatureData?.length === 0) {
@@ -86,27 +87,19 @@ export class TemperatureDataService {
   }
 
   //function to get a temperatureData by id, if not found, throw an error
-  public async getTheLastTemperaturesDataByDate(
-    date: string,
-    templateId: string,
-  ) {
-    const startDate = new Date(date);
-    const endDate = new Date(startDate);
-    endDate.setDate(startDate.getDate() + 1);
-
+  public async getTheLastTemperaturesDataById(temperatureId: string) {
     try {
       const temperatureData: TemperatureDataEntity[] =
         await this.temperatureDataRepository.find({
           where: {
-            createdAt: Between(startDate, endDate),
-            millComponent: { templateId: templateId },
+            temperatureId: temperatureId,
           },
           relations: ['millComponent'],
           select: {
             id: true,
             createdAt: true,
-            isSent: true,
             temperature: true,
+            temperatureId: true,
             millComponent: {
               millName: true,
               tandemNumber: true,
@@ -123,44 +116,7 @@ export class TemperatureDataService {
         );
       }
 
-      const latestTimestamp = temperatureData[0].createdAt;
-
-      // Calcular el timestamp 30 minutos antes del más reciente
-      const thirtyMinutesAgo = new Date(latestTimestamp);
-      thirtyMinutesAgo.setMinutes(thirtyMinutesAgo.getMinutes() - 30);
-
-      // Obtener todos los registros dentro de los últimos 30 minutos desde el más reciente
-      const recentTemperatures: TemperatureDataEntity[] =
-        await this.temperatureDataRepository.find({
-          where: {
-            createdAt: MoreThanOrEqual(thirtyMinutesAgo),
-            millComponent: { templateId: templateId },
-          },
-          relations: ['millComponent'],
-          select: {
-            id: true,
-            createdAt: true,
-            isSent: true,
-            temperature: true,
-            millComponent: {
-              millName: true,
-              tandemNumber: true,
-              id: true,
-              componentName: true,
-            },
-          },
-          order: {
-            createdAt: 'DESC',
-          },
-        });
-
-      const response: Response<TemperatureDataEntity[]> = {
-        statusCode: HttpStatus.OK,
-        message: 'Temperature data found successfully',
-        data: recentTemperatures,
-      };
-
-      return response;
+      return temperatureData;
     } catch (error) {
       this.logger.error(`Error getting temperature data by id: ${error}`);
       throw ErrorManager.createSignatureError(error.message);
@@ -182,7 +138,6 @@ export class TemperatureDataService {
           relations: ['millComponent'],
           select: {
             id: true,
-            isSent: true,
             createdAt: true,
             temperature: true,
             millComponent: {

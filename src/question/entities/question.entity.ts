@@ -1,4 +1,4 @@
-import { Entity, Column, ManyToOne, OneToMany } from 'typeorm';
+import { Entity, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
 import { BaseEntity } from '../../config/base.entity';
 import { QuestionInterface } from '../interfaces';
 import { FormEntity } from '../../form/entities/form.entity';
@@ -15,7 +15,11 @@ export class QuestionEntity extends BaseEntity implements QuestionInterface {
   @Column()
   order: number;
 
+  @Column()
+  formId: string;
+
   @ManyToOne(() => FormEntity, (form) => form.questions)
+  @JoinColumn({ name: 'form_id' })
   form: FormEntity;
 
   @OneToMany(() => AnswerEntity, (answer) => answer.question)

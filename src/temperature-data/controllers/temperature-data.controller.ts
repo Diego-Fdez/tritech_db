@@ -64,17 +64,15 @@ export class TemperatureDataController {
 
   //function to get a temperature data by ID
   @Roles('BASIC')
-  @Get('/:date')
-  public async getTheLastTemperaturesDataByDate(
-    @Param('date') date: string,
-    @Query('templateId') templateId: string,
+  @Get('/:temperatureId')
+  public async getTheLastTemperaturesDataById(
+    @Param('temperatureId') temperatureId: string,
     @Response() res: Res,
   ) {
     try {
       const temperatureData =
-        await this.temperatureDataService.getTheLastTemperaturesDataByDate(
-          date,
-          templateId,
+        await this.temperatureDataService.getTheLastTemperaturesDataById(
+          temperatureId,
         );
       res.send(temperatureData);
     } catch (error) {

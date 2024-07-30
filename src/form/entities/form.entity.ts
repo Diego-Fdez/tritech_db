@@ -1,4 +1,4 @@
-import { Entity, Column, ManyToOne, OneToMany } from 'typeorm';
+import { Entity, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
 import { ClientsEntity } from '../../clients/entities/clients.entity';
 import { UsersEntity } from '../../users/entities/users.entity';
 import { BaseEntity } from '../../config/base.entity';
@@ -11,13 +11,21 @@ export class FormEntity extends BaseEntity implements FormInterface {
   @Column()
   title: string;
 
-  @Column()
+  @Column({ nullable: true })
   description: string;
 
+  @Column()
+  clientId: string;
+
+  @Column()
+  createdById: string;
+
   @ManyToOne(() => ClientsEntity, (client) => client.forms)
+  @JoinColumn({ name: 'client_id' })
   client: ClientsEntity;
 
   @ManyToOne(() => UsersEntity, (user) => user.forms)
+  @JoinColumn({ name: 'created_by_id' })
   createdBy: UsersEntity;
 
   @OneToMany(() => QuestionEntity, (question) => question.form)

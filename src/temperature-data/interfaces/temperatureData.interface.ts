@@ -1,7 +1,6 @@
 export interface TemperatureDataInterface {
   millComponentId: string;
   temperature: number;
-  date: Date;
   temperatureId: string;
 }
 

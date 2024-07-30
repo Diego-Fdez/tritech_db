@@ -1,11 +1,4 @@
-import {
-  IsBoolean,
-  IsDate,
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class TemperatureDataCreateDTO {
   @IsNotEmpty()
@@ -16,13 +9,9 @@ export class TemperatureDataCreateDTO {
   @IsNumber()
   temperature: number;
 
-  @IsDate()
-  @IsNotEmpty()
-  date: Date;
-
   @IsOptional()
   @IsString()
-  details: string;
+  temperatureId: string;
 }
 
 export class TemperatureDataUpdateDTO {
@@ -34,15 +23,7 @@ export class TemperatureDataUpdateDTO {
   @IsNumber()
   temperature: number;
 
-  @IsDate()
-  @IsOptional()
-  date: Date;
-
   @IsOptional()
   @IsString()
-  details: string;
-
-  @IsOptional()
-  @IsBoolean()
-  isSent: boolean;
+  temperatureId: string;
 }

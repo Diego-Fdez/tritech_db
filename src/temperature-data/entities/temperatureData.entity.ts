@@ -14,9 +14,6 @@ export class TemperatureDataEntity
   @Column()
   temperature: number;
 
-  @Column()
-  date: Date;
-
   @Column({ type: 'uuid' })
   temperatureId: string;
 
