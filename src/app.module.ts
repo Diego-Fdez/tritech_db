@@ -15,6 +15,7 @@ import { FormModule } from './form/form.module';
 import { QuestionModule } from './question/question.module';
 import { AnswerModule } from './answer/answer.module';
 import { ResponsesModule } from './responses/responses.module';
+import { AnswerOptionsModule } from './answer-options/answer-options.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { ResponsesModule } from './responses/responses.module';
     QuestionModule,
     AnswerModule,
     ResponsesModule,
+    AnswerOptionsModule,
   ],
   providers: [],
   controllers: [],

@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Response } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Response } from '@nestjs/common';
 import { Response as Res } from 'express';
 import { FormService } from '../services/form.service';
 import { Roles } from '../../auth/decorators';
@@ -19,6 +19,26 @@ export class FormController {
       const newForm = await this.formService.createForm(body);
 
       res.send(newForm);
+    } catch (error) {
+      res.status(error?.status || 500).send({
+        statusCode: error?.status || 500,
+        status: 'FAILED',
+        errorMessage: error?.message || error,
+      });
+    }
+  }
+
+  //fn to get a form by ID
+  @Roles('BASIC')
+  @Get('/:formId')
+  public async getFormById(
+    @Param('formId') formId: string,
+    @Response() res: Res,
+  ) {
+    try {
+      const form = await this.formService.getFormById(formId);
+
+      res.send(form);
     } catch (error) {
       res.status(error?.status || 500).send({
         statusCode: error?.status || 500,

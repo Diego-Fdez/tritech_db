@@ -1,4 +1,13 @@
-import { IsNotEmpty, IsString, IsNumber, IsOptional } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  IsNotEmpty,
+  IsString,
+  IsNumber,
+  IsOptional,
+  IsArray,
+  ValidateNested,
+} from 'class-validator';
+import { CreateAnswerOptionsDTO } from 'src/answer-options/dto';
 
 export class CreateQuestionDTO {
   @IsNotEmpty()
@@ -16,4 +25,10 @@ export class CreateQuestionDTO {
   @IsOptional()
   @IsString()
   formId?: string;
+
+  @IsArray()
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => CreateAnswerOptionsDTO)
+  options: CreateAnswerOptionsDTO[];
 }

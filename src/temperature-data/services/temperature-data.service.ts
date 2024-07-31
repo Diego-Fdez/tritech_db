@@ -50,7 +50,7 @@ export class TemperatureDataService {
     try {
       const temperatureData: TemperatureDataEntity[] =
         await this.temperatureDataRepository.find({
-          relations: ['millComponent'],
+          relations: ['millComponent', 'millComponent.template'],
           select: {
             id: true,
             createdAt: true,
@@ -61,6 +61,11 @@ export class TemperatureDataService {
               tandemNumber: true,
               id: true,
               componentName: true,
+              template: {
+                client: {
+                  clientName: true,
+                },
+              },
             },
           },
           order: { createdAt: 'DESC' },
@@ -94,7 +99,7 @@ export class TemperatureDataService {
           where: {
             temperatureId: temperatureId,
           },
-          relations: ['millComponent'],
+          relations: ['millComponent', 'millComponent.template'],
           select: {
             id: true,
             createdAt: true,
@@ -105,6 +110,11 @@ export class TemperatureDataService {
               tandemNumber: true,
               id: true,
               componentName: true,
+              template: {
+                client: {
+                  clientName: true,
+                },
+              },
             },
           },
         });
@@ -135,7 +145,7 @@ export class TemperatureDataService {
             createdAt: Between(startDate, endDate),
             millComponent: { templateId },
           },
-          relations: ['millComponent'],
+          relations: ['millComponent', 'millComponent.template'],
           select: {
             id: true,
             createdAt: true,
@@ -145,6 +155,11 @@ export class TemperatureDataService {
               tandemNumber: true,
               id: true,
               componentName: true,
+              template: {
+                client: {
+                  clientName: true,
+                },
+              },
             },
           },
         });

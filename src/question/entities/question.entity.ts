@@ -3,6 +3,7 @@ import { BaseEntity } from '../../config/base.entity';
 import { QuestionInterface } from '../interfaces';
 import { FormEntity } from '../../form/entities/form.entity';
 import { AnswerEntity } from '../../answer/entities/answer.entity';
+import { AnswerOptionsEntity } from '../../answer-options/entities/answer-options.entity';
 
 @Entity({ name: 'question' })
 export class QuestionEntity extends BaseEntity implements QuestionInterface {
@@ -24,4 +25,9 @@ export class QuestionEntity extends BaseEntity implements QuestionInterface {
 
   @OneToMany(() => AnswerEntity, (answer) => answer.question)
   answers: AnswerEntity[];
+
+  @OneToMany(() => AnswerOptionsEntity, (option) => option.question, {
+    cascade: true,
+  })
+  options: AnswerOptionsEntity[];
 }
