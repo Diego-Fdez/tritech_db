@@ -6,7 +6,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { CreateQuestionDTO } from '../../question/dto';
+import { CreateQuestionDTO, UpdateQuestionDTO } from '../../question/dto';
 
 export class CreateFormDTO {
   @IsNotEmpty()
@@ -30,4 +30,20 @@ export class CreateFormDTO {
   @ValidateNested({ each: true })
   @Type(() => CreateQuestionDTO)
   questions: CreateQuestionDTO[];
+}
+
+export class UpdateFormDTO {
+  @IsOptional()
+  @IsString()
+  title?: string;
+
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @IsArray()
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => UpdateQuestionDTO)
+  questions: UpdateQuestionDTO[];
 }

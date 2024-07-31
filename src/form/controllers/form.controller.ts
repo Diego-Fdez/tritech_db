@@ -1,8 +1,16 @@
-import { Body, Controller, Get, Param, Post, Response } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Response,
+} from '@nestjs/common';
 import { Response as Res } from 'express';
 import { FormService } from '../services/form.service';
 import { Roles } from '../../auth/decorators';
-import { CreateFormDTO } from '../dto';
+import { CreateFormDTO, UpdateFormDTO } from '../dto';
 
 @Controller('form')
 export class FormController {
@@ -39,6 +47,27 @@ export class FormController {
       const form = await this.formService.getFormById(formId);
 
       res.send(form);
+    } catch (error) {
+      res.status(error?.status || 500).send({
+        statusCode: error?.status || 500,
+        status: 'FAILED',
+        errorMessage: error?.message || error,
+      });
+    }
+  }
+
+  //fn to update a form by ID
+  @Roles('BASIC')
+  @Patch('/:formId')
+  public async updateFormById(
+    @Param('formId') formId: string,
+    @Body() body: UpdateFormDTO,
+    @Response() res: Res,
+  ) {
+    try {
+      const updatedForm = await this.formService.updateFormById(formId, body);
+
+      res.send(updatedForm);
     } catch (error) {
       res.status(error?.status || 500).send({
         statusCode: error?.status || 500,

@@ -7,7 +7,10 @@ import {
   IsArray,
   ValidateNested,
 } from 'class-validator';
-import { CreateAnswerOptionsDTO } from 'src/answer-options/dto';
+import {
+  CreateAnswerOptionsDTO,
+  UpdateAnswerOptionsDTO,
+} from 'src/answer-options/dto';
 
 export class CreateQuestionDTO {
   @IsNotEmpty()
@@ -31,4 +34,28 @@ export class CreateQuestionDTO {
   @ValidateNested({ each: true })
   @Type(() => CreateAnswerOptionsDTO)
   options: CreateAnswerOptionsDTO[];
+}
+
+export class UpdateQuestionDTO {
+  @IsOptional()
+  @IsString()
+  typeQuestion?: string;
+
+  @IsOptional()
+  @IsString()
+  textQuestion?: string;
+
+  @IsOptional()
+  @IsNumber()
+  order?: number;
+
+  @IsNotEmpty()
+  @IsString()
+  formId: string;
+
+  @IsArray()
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => UpdateAnswerOptionsDTO)
+  options?: UpdateAnswerOptionsDTO[];
 }

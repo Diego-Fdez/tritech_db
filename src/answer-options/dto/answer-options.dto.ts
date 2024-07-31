@@ -9,3 +9,13 @@ export class CreateAnswerOptionsDTO {
   @IsOptional()
   questionId: string;
 }
+
+export class UpdateAnswerOptionsDTO {
+  @IsString()
+  @IsOptional()
+  optionText: string;
+
+  @IsString()
+  @IsNotEmpty()
+  questionId: string;
+}

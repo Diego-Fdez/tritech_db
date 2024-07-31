@@ -5,7 +5,7 @@ import { FormEntity } from '../entities/form.entity';
 import { UsersService } from '../../users/services/users.service';
 import { ClientsService } from '../../clients/services/clients.service';
 import { ErrorManager, Response } from '../../utils';
-import { CreateFormDTO } from '../dto';
+import { CreateFormDTO, UpdateFormDTO } from '../dto';
 import { QuestionEntity } from 'src/question/entities/question.entity';
 
 @Injectable()
@@ -159,6 +159,41 @@ export class FormService {
       return response;
     } catch (error) {
       this.logger.error(`Error creating a new form: ${error}`);
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
+  //function to update a form by id
+  public async updateFormById(
+    id: string,
+    body: UpdateFormDTO,
+  ): Promise<Response<any>> {
+    const { title, description } = body;
+
+    try {
+      const updatedForm = await this.formRepository.update(
+        { id },
+        { title, description },
+      );
+
+      if (updatedForm.affected === 0) {
+        throw ErrorManager.createCustomError(
+          `No encontramos el formulario con el ID: ${id}.`,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      const form = await this.formRepository.findOneBy({ id });
+
+      const response: Response<any> = {
+        statusCode: HttpStatus.OK,
+        message: 'Formulario actualizado con éxito',
+        data: form,
+      };
+
+      return response;
+    } catch (error) {
+      this.logger.error(`Error updating a form: ${error}`);
       throw ErrorManager.createSignatureError(error.message);
     }
   }
