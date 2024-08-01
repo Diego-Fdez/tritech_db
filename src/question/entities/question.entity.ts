@@ -1,6 +1,6 @@
 import { Entity, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
 import { BaseEntity } from '../../config/base.entity';
-import { QuestionInterface } from '../interfaces';
+import { QuestionInterface, QuestionStatus } from '../interfaces';
 import { FormEntity } from '../../form/entities/form.entity';
 import { AnswerEntity } from '../../answer/entities/answer.entity';
 import { AnswerOptionsEntity } from '../../answer-options/entities/answer-options.entity';
@@ -18,6 +18,13 @@ export class QuestionEntity extends BaseEntity implements QuestionInterface {
 
   @Column()
   formId: string;
+
+  @Column({
+    type: 'enum',
+    enum: QuestionStatus,
+    default: QuestionStatus.ACTIVE,
+  })
+  status: QuestionStatus;
 
   @ManyToOne(() => FormEntity, (form) => form.questions)
   @JoinColumn({ name: 'form_id' })

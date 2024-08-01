@@ -5,6 +5,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Response,
 } from '@nestjs/common';
 import { Response as Res } from 'express';
@@ -68,6 +69,30 @@ export class FormController {
       const updatedForm = await this.formService.updateFormById(formId, body);
 
       res.send(updatedForm);
+    } catch (error) {
+      res.status(error?.status || 500).send({
+        statusCode: error?.status || 500,
+        status: 'FAILED',
+        errorMessage: error?.message || error,
+      });
+    }
+  }
+
+  //fn to logic delete a form by ID
+  @Roles('ADMIN')
+  @Patch('/delete/:formId')
+  public async logicDeleteFormById(
+    @Param('formId') formId: string,
+    @Query('userId') userId: string,
+    @Response() res: Res,
+  ) {
+    try {
+      const deletedForm = await this.formService.logicDeleteFormById(
+        formId,
+        userId,
+      );
+
+      res.send(deletedForm);
     } catch (error) {
       res.status(error?.status || 500).send({
         statusCode: error?.status || 500,

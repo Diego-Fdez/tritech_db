@@ -48,14 +48,4 @@ export class UpdateQuestionDTO {
   @IsOptional()
   @IsNumber()
   order?: number;
-
-  @IsNotEmpty()
-  @IsString()
-  formId: string;
-
-  @IsArray()
-  @IsOptional()
-  @ValidateNested({ each: true })
-  @Type(() => UpdateAnswerOptionsDTO)
-  options?: UpdateAnswerOptionsDTO[];
 }

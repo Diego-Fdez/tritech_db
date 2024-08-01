@@ -3,4 +3,10 @@ export interface QuestionInterface {
   textQuestion: string;
   order: number;
   formId: string;
+  status: QuestionStatus;
+}
+
+export enum QuestionStatus {
+  ACTIVE = 'active',
+  INACTIVE = 'inactive',
 }

@@ -3,4 +3,10 @@ export interface FormInterface {
   description?: string;
   clientId: string;
   createdById: string;
+  status: FormStatus;
+}
+
+export enum FormStatus {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
 }

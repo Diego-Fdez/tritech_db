@@ -6,7 +6,8 @@ import { UsersService } from '../../users/services/users.service';
 import { ClientsService } from '../../clients/services/clients.service';
 import { ErrorManager, Response } from '../../utils';
 import { CreateFormDTO, UpdateFormDTO } from '../dto';
-import { QuestionEntity } from 'src/question/entities/question.entity';
+import { QuestionEntity } from '../../question/entities/question.entity';
+import { FormStatus } from '../interfaces';
 
 @Injectable()
 export class FormService {
@@ -194,6 +195,44 @@ export class FormService {
       return response;
     } catch (error) {
       this.logger.error(`Error updating a form: ${error}`);
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
+  //function logicDelete by ID
+  public async logicDeleteFormById(
+    questionId: string,
+    userId: string,
+  ): Promise<Response<any>> {
+    try {
+      const userExist = await this.usersService.getUserById(userId);
+
+      if (!userExist)
+        throw ErrorManager.createCustomError(
+          'Usuario no encontrado',
+          HttpStatus.NOT_FOUND,
+        );
+
+      const formExist = await this.formRepository.update(
+        { id: questionId },
+        { status: FormStatus.INACTIVE },
+      );
+
+      if (!formExist) {
+        throw ErrorManager.createCustomError(
+          `No encontramos el formulario con el ID: ${questionId}.`,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      const response: Response<any> = {
+        statusCode: HttpStatus.OK,
+        message: 'Formulario desactivado con éxito',
+      };
+
+      return response;
+    } catch (error) {
+      this.logger.error(`Error deleting a form: ${error}`);
       throw ErrorManager.createSignatureError(error.message);
     }
   }

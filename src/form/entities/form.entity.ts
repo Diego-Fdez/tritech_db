@@ -5,6 +5,7 @@ import { BaseEntity } from '../../config/base.entity';
 import { FormInterface } from '../interfaces';
 import { QuestionEntity } from '../../question/entities/question.entity';
 import { ResponsesEntity } from '../../responses/entities/responses.entity';
+import { FormStatus } from '../dto';
 
 @Entity({ name: 'form' })
 export class FormEntity extends BaseEntity implements FormInterface {
@@ -19,6 +20,9 @@ export class FormEntity extends BaseEntity implements FormInterface {
 
   @Column()
   createdById: string;
+
+  @Column({ type: 'enum', enum: FormStatus, default: FormStatus.ACTIVE })
+  status: FormStatus;
 
   @ManyToOne(() => ClientsEntity, (client) => client.forms)
   @JoinColumn({ name: 'client_id' })
