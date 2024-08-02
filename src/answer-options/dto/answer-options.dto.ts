@@ -14,8 +14,4 @@ export class UpdateAnswerOptionsDTO {
   @IsString()
   @IsOptional()
   optionText: string;
-
-  @IsString()
-  @IsNotEmpty()
-  questionId: string;
 }

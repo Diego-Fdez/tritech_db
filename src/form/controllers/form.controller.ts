@@ -19,7 +19,7 @@ export class FormController {
 
   //create a new form
   @Roles('BASIC')
-  @Post()
+  @Post('/')
   public async createNewForm(
     @Body() body: CreateFormDTO,
     @Response() res: Res,

@@ -2,10 +2,9 @@ import { Entity, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
 import { ClientsEntity } from '../../clients/entities/clients.entity';
 import { UsersEntity } from '../../users/entities/users.entity';
 import { BaseEntity } from '../../config/base.entity';
-import { FormInterface } from '../interfaces';
+import { FormInterface, FormStatus } from '../interfaces';
 import { QuestionEntity } from '../../question/entities/question.entity';
 import { ResponsesEntity } from '../../responses/entities/responses.entity';
-import { FormStatus } from '../dto';
 
 @Entity({ name: 'form' })
 export class FormEntity extends BaseEntity implements FormInterface {

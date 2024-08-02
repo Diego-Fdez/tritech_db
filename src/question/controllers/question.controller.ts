@@ -16,7 +16,7 @@ export class QuestionController {
 
   //fn to update a question by ID
   @Roles('BASIC')
-  @Patch(':questionId')
+  @Patch('/:questionId')
   public async updateQuestion(
     @Param('questionId') questionId: string,
     @Query('userId') userId: string,
@@ -41,7 +41,7 @@ export class QuestionController {
 
   //function to logic delete a question by ID
   @Roles('ADMIN')
-  @Patch('delete/:questionId')
+  @Patch('/delete/:questionId')
   public async logicDeleteQuestion(
     @Param('questionId') questionId: string,
     @Query('userId') userId: string,
