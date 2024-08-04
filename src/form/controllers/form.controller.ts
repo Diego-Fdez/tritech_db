@@ -57,6 +57,26 @@ export class FormController {
     }
   }
 
+  //fn to get a form by client ID
+  @Roles('BASIC')
+  @Get('/client/:clientId')
+  public async getFormByClientId(
+    @Param('clientId') clientId: string,
+    @Response() res: Res,
+  ) {
+    try {
+      const form = await this.formService.getFormByClientId(clientId);
+
+      res.send(form);
+    } catch (error) {
+      res.status(error?.status || 500).send({
+        statusCode: error?.status || 500,
+        status: 'FAILED',
+        errorMessage: error?.message || error,
+      });
+    }
+  }
+
   //fn to update a form by ID
   @Roles('BASIC')
   @Patch('/:formId')

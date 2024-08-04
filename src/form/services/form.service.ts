@@ -7,7 +7,8 @@ import { ClientsService } from '../../clients/services/clients.service';
 import { ErrorManager, Response } from '../../utils';
 import { CreateFormDTO, UpdateFormDTO } from '../dto';
 import { QuestionEntity } from '../../question/entities/question.entity';
-import { FormStatus } from '../interfaces';
+import { FormattedFormInterface, FormStatus } from '../interfaces';
+import { TemplateTypesEnum } from 'src/templates/interfaces';
 
 @Injectable()
 export class FormService {
@@ -155,6 +156,46 @@ export class FormService {
         statusCode: HttpStatus.OK,
         message: 'OK',
         data: form,
+      };
+
+      return response;
+    } catch (error) {
+      this.logger.error(`Error creating a new form: ${error}`);
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
+  //function to get a form by clientID
+  public async getFormByClientId(
+    clientId: string,
+  ): Promise<Response<FormattedFormInterface[]>> {
+    try {
+      const forms: FormEntity[] = await this.formRepository.find({
+        where: { clientId },
+      });
+
+      if (!forms) {
+        throw ErrorManager.createCustomError(
+          `No encontramos el formulario con el ID: ${clientId}.`,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      const formattedForm: FormattedFormInterface[] = forms.map((form) => ({
+        id: form.id,
+        clientId: form.clientId,
+        templateName: form.title,
+        createdBy: form.createdById,
+        status: form.status,
+        templateType: TemplateTypesEnum.CHECKLIST,
+        createdAt: form.createdAt,
+        updatedAt: form.updatedAt,
+      }));
+
+      const response: Response<FormattedFormInterface[]> = {
+        statusCode: HttpStatus.OK,
+        message: 'OK',
+        data: formattedForm,
       };
 
       return response;

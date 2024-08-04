@@ -6,6 +6,7 @@ import { TemplatesEntity } from './entities/templates.entity';
 import { UsersService } from '../users/services/users.service';
 import { ClientsService } from '../clients/services/clients.service';
 import { MillComponentsService } from '../mill-components/services/mill-components.service';
+import { FormService } from '../form/services/form.service';
 
 @Global()
 @Module({
@@ -15,6 +16,7 @@ import { MillComponentsService } from '../mill-components/services/mill-componen
     UsersService,
     ClientsService,
     MillComponentsService,
+    FormService,
   ],
   controllers: [TemplatesController],
   exports: [TemplatesService, TypeOrmModule],

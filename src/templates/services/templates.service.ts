@@ -15,7 +15,9 @@ import { ClientsService } from '../../clients/services/clients.service';
 import { CreateTemplateInterface, TemplateTypesEnum } from '../interfaces';
 import { MillComponentsService } from '../../mill-components/services/mill-components.service';
 import { MillComponentsInterface } from '../../mill-components/interfaces';
-import { filterComponents } from 'src/utils/filteredTemplates';
+import { filterComponents } from '../../utils/filteredTemplates';
+import { FormService } from '../../form/services/form.service';
+import { FormattedFormInterface } from 'src/form/interfaces';
 
 @Injectable()
 export class TemplatesService {
@@ -28,6 +30,7 @@ export class TemplatesService {
     @Inject(forwardRef(() => MillComponentsService))
     private readonly millComponentsService: MillComponentsService,
     private readonly dataSource: DataSource,
+    private readonly formService: FormService,
   ) {}
 
   //function to create a new template
@@ -170,19 +173,36 @@ export class TemplatesService {
   //function to get all templates by ClientId
   public async getTemplatesByClientId(
     clientId: string,
-  ): Promise<Response<TemplatesEntity[]>> {
+  ): Promise<Response<FormattedFormInterface[]>> {
     try {
-      const templates: TemplatesEntity[] =
-        await this.templatesRepository.findBy({ clientId });
+      const templates: FormattedFormInterface[] =
+        await this.templatesRepository.find({
+          where: { clientId },
+          select: {
+            id: true,
+            clientId: true,
+            templateName: true,
+            createdBy: true,
+            updatedAt: true,
+            createdAt: true,
+            status: true,
+            templateType: true,
+          },
+        });
 
-      if (templates.length === 0) {
+      const { data }: Response<FormattedFormInterface[]> =
+        await this.formService.getFormByClientId(clientId);
+
+      if (data.length === 0 && templates.length === 0) {
         throw ErrorManager.createCustomError(
-          `No templates found for client with id: ${clientId}`,
+          `No se encontraron formatos para el cliente: ${clientId}`,
           HttpStatus.NOT_FOUND,
         );
       }
 
-      const response: Response<TemplatesEntity[]> = {
+      templates.push(...data);
+
+      const response: Response<FormattedFormInterface[]> = {
         statusCode: HttpStatus.OK,
         message: 'Templates found successfully',
         data: templates,
