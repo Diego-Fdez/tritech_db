@@ -12,6 +12,9 @@ export class AnswerEntity extends BaseEntity implements AnswerInterface {
   @Column()
   questionId: string;
 
+  @Column()
+  responseId: string;
+
   @Column({ type: 'enum', enum: AnswerStatus, default: AnswerStatus.ACTIVE })
   status: AnswerStatus;
 
@@ -20,5 +23,6 @@ export class AnswerEntity extends BaseEntity implements AnswerInterface {
   question: QuestionEntity;
 
   @ManyToOne(() => ResponsesEntity, (response) => response.answers)
+  @JoinColumn({ name: 'response_id' })
   response: ResponsesEntity;
 }

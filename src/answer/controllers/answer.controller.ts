@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Response } from '@nestjs/common';
+import { Body, Controller, Param, Post, Query, Response } from '@nestjs/common';
 import { Response as Res } from 'express';
 import { AnswerService } from '../services/answer.service';
 import { Roles } from '../../auth/decorators';
@@ -10,13 +10,19 @@ export class AnswerController {
 
   //function to register answers
   @Roles('BASIC')
-  @Post('/')
+  @Post('/:userId')
   public async createAnswer(
     @Body() body: CreateAnswerDTO,
+    @Param('userId') userId: string,
+    @Query('formId') formId: string,
     @Response() res: Res,
   ) {
     try {
-      const response = await this.answerService.createAnswer(body);
+      const response = await this.answerService.createAnswer(
+        body,
+        userId,
+        formId,
+      );
 
       res.status(response.statusCode).send(response);
     } catch (error) {

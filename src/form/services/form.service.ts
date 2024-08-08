@@ -122,6 +122,7 @@ export class FormService {
         order: { questions: { order: 'ASC' } },
         select: {
           id: true,
+          title: true,
           description: true,
           client: {
             clientName: true,

@@ -22,7 +22,7 @@ export class MillComponentsController {
 
   //function to create a new millComponent
   @Roles('BASIC')
-  @Post()
+  @Post('/')
   public async createMillComponent(
     @Body() body: MillComponentsCreateDTO[],
     @Response() res: Res,
